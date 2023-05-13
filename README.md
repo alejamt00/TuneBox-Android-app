@@ -13,6 +13,7 @@ El proyecto está basado en otro proyecto de la asignatura de Android de 2º de 
 
 ## Capturas de pantalla
 
+PLACEHOLDER-PLACEHOLDER-PLACEHOLDER-PLACEHOLDER-PLACEHOLDER-PLACEHOLDER-PLACEHOLDER-PLACEHOLDER
 ![Pantalla principal](screenshot1.png)
 ![Pantalla de perfil](screenshot2.png)
 ![Pantalla de búsqueda](screenshot3.png)
