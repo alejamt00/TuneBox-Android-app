@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "777607842847",
+    "project_id": "tunebox-reborn",
+    "storage_bucket": "tunebox-reborn.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777607842847:android:5784451e03b7cccebed92a",
+        "android_client_info": {
+          "package_name": "com.osaki.tuneboxreborn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "777607842847-25k4550en54aqnb7a5jg0mhs8jep9kne.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVtyYRpq_Ktmt6IIwQu9Eg4Q02MyklRuE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "777607842847-25k4550en54aqnb7a5jg0mhs8jep9kne.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
