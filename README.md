@@ -22,23 +22,24 @@ PLACEHOLDER-PLACEHOLDER-PLACEHOLDER-PLACEHOLDER-PLACEHOLDER-PLACEHOLDER-PLACEHOL
 
 Para instalar la aplicación, se necesita:
 
-- Un dispositivo Android con una versión igual o superior a la 5.0 (Lollipop).
-- Una cuenta de Spotify Premium para poder reproducir las canciones.
-- Una cuenta de Google para poder iniciar sesión en la aplicación.
+- Un dispositivo Android con una versión igual o superior a la 6.0.
+- (Opcional) Una cuenta de Google para iniciar sesión en la aplicación.
 
 Los pasos para instalar la aplicación son:
 
-- Descargar el archivo APK desde el repositorio de GitHub o desde este [enlace](https://github.com/.../releases/download/v1.0/app-release.apk).
+- Descargar el archivo APK desde el repositorio de GitHub o desde este [enlace]PLACEHOLDER-PLACEHOLDER-PLACEHOLDER.com.
 - Permitir la instalación de aplicaciones desde fuentes desconocidas en los ajustes del dispositivo.
 - Abrir el archivo APK e instalar la aplicación.
-- Abrir la aplicación e iniciar sesión con una cuenta de Google.
+- Abrir la aplicación y registrar un nuevo usuario o iniciar sesión con Google.
 - Conceder los permisos necesarios para acceder al almacenamiento y a Internet.
 - Disfrutar de la aplicación.
 
 ## Licencia
 
-Este proyecto está bajo la licencia MIT. Consulta el archivo [LICENSE](https://github.com/.../blob/main/LICENSE) para más detalles.
-
-Origen: Conversación con Bing, 13/5/2023(1) GitHub: Let’s build from here · GitHub. https://github.com/dashboard Con acceso 13/5/2023.
-(2) About · GitHub. https://github.com/about Con acceso 13/5/2023.
-(3) GitHub Docs. https://docs.github.com/es Con acceso 13/5/2023.
+Este proyecto está bajo la licencia MCAV.
+Concretamente:
+Mis
+Cojones
+al
+Viento
+Es broma,jaja no sé
