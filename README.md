@@ -38,8 +38,13 @@ Los pasos para instalar la aplicación son:
 
 Este proyecto está bajo la licencia MCAV.
 Concretamente:
+
 Mis
+
 Coj****
+
 al
+
 Viento
+
 Es broma,jaja no sé
