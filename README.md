@@ -27,7 +27,7 @@ Para instalar la aplicación, se necesita:
 
 Los pasos para instalar la aplicación son:
 
-- Descargar el archivo APK desde el repositorio de GitHub o desde este [enlace]PLACEHOLDER-PLACEHOLDER-PLACEHOLDER.com.
+- Descargar el archivo APK desde el repositorio de GitHub o desde este [enlace]www.placeholder.com
 - Permitir la instalación de aplicaciones desde fuentes desconocidas en los ajustes del dispositivo.
 - Abrir el archivo APK e instalar la aplicación.
 - Abrir la aplicación y registrar un nuevo usuario o iniciar sesión con Google.
@@ -39,7 +39,7 @@ Los pasos para instalar la aplicación son:
 Este proyecto está bajo la licencia MCAV.
 Concretamente:
 Mis
-Cojones
+Coj****
 al
 Viento
 Es broma,jaja no sé
