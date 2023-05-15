@@ -1,9 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.TuneBoxReborn" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Theme.TuneBoxReborn" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/main_purple</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/main_purple_variant_bright</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/main_purple</item>
+        <item name="colorSecondaryVariant">@color/main_purple_variant_bright</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/black</item>
+        <!-- Customize your theme here. -->
     </style>
-
-    <style name="Theme.TuneBoxReborn" parent="Base.Theme.TuneBoxReborn" />
 </resources>

@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">TuneBox</string>
+    <string name="api_news_key" translatable="false">1110e8826ffd4657a278fa05f8978ce3</string>
+    <string name="bsString">Soundtracks</string>
+    <string name="rockString">Rock</string>
+    <string name="indieString">Indie</string>
+    <string name="metalString">Metal</string>
+    <string name="popString">Pop</string>
+    <string name="reggaetonString">Reggaeton</string>
+    <string name="classicalString">Classical Music</string>
+    <string name="technoString">Techno</string>
+    <string name="hiphopString">Hip Hop</string>
+    <string name="flamencoString">Flamenco</string>
+    <string name="genreString">Select a music genre...</string>
+    <string name="avatarSpeakableText">Profile avatar</string>
+    <string name="buttonBackSpeakableText">Button to go to the previous fragment</string>
+    <string name="quieres_borrar_este_tune">Do you want to delete this tune?</string>
+    <string name="cancelar">Cancel</string>
+    <string name="aceptar">Accept</string>
+    <string name="avatar_del_usuario">User avatar</string>
+    <string name="stay_tuned">Stay tuned!</string>
+    <string name="publicar">Publish</string>
+    <string name="icono_de_la_app">App\'s icon</string>
+    <string name="usuario">User</string>
+    <string name="contrase_a">Password</string>
+    <string name="no_tienes_cuenta_reg_strate">Don\'t have an account? Sign up!</string>
+    <string name="iniciar_sesi_n">Sign in</string>
+    <string name="g_nero_musical_favorito">Favourite music genre:\ </string>
+    <string name="spinnerGenre">Music genres spinner</string>
+    <string name="genreSpinnerSpeakable">Music genres spinner</string>
+    <string name="nombre">Name</string>
+    <string name="fecha_de_nacimiento">Date of birth</string>
+    <string name="registrar">Sign up</string>
+    <string name="ya_tienes_cuenta_inicia_sesi_n">Already have an account? Sign in</string>
+    <string name="addTune">"Write a tune message"</string>
+    <string name="imgNoticia">New\'s image</string>
+    <string name="correctUser">User and password are correct!</string>
+    <string name="fillBothFields">Fill in both fields!</string>
+    <string name="fetching">Fetching articles...</string>
+    <string name="registerSuccess">Successfully registered user!</string>
+    <string name="existError">This user already exists!</string>
+    <string name="avatarError">Avatar not selected!</string>
+    <string name="errorFieldsNotFilled">Some fields are missing...</string>
+    <string name="wrongUser">Wrong user or password!</string>
+
+</resources>
