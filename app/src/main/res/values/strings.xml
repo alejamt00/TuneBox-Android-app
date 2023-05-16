@@ -13,6 +13,7 @@
     <string name="flamencoString">Flamenco</string>
     <string name="genreString">Selecciona un género</string>
     <string name="avatarSpeakableText">Avatar de tu perfil</string>
+    <string name="signGoogle">¡Inicia sesión con Google!</string>
     <string name="buttonBackSpeakableText">Botón para ir hacia el anterior fragmento</string>
     <string name="quieres_borrar_este_tune">¿Quieres borrar este tune?</string>
     <string name="cancelar">Cancelar</string>

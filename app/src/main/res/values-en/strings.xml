@@ -43,5 +43,6 @@
     <string name="errorFieldsNotFilled">Some fields are missing...</string>
     <string name="wrongData">Wrong data...</string>
     <string name="user">User</string>
+    <string name="signGoogle">Sign in with Google!</string>
 
 </resources>
