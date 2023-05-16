@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:textColor="@color/main_purple_variant_bright"
+    android:textSize="18dp"
+    android:padding="10dp"
+    android:background="#00000000"
+    >
+
+</TextView>

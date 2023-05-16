@@ -13,4 +13,12 @@
         <item name="android:statusBarColor">@color/black</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="spinnerStyle" parent="Base.Widget.AppCompat.Spinner">
+        <item name="android:textColor">@color/main_purple_variant_bright</item>
+    </style>
+
+    <style name="mySpinnerDropDownStyle" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:background">@drawable/spinner_item_bg</item>
+    </style>
 </resources>

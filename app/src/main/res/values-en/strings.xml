@@ -21,7 +21,7 @@
     <string name="stay_tuned">Stay tuned!</string>
     <string name="publicar">Publish</string>
     <string name="icono_de_la_app">App\'s icon</string>
-    <string name="usuario">User</string>
+    <string name="email">Email</string>
     <string name="contrase_a">Password</string>
     <string name="no_tienes_cuenta_reg_strate">Don\'t have an account? Sign up!</string>
     <string name="iniciar_sesi_n">Sign in</string>
@@ -41,6 +41,7 @@
     <string name="existError">This user already exists!</string>
     <string name="avatarError">Avatar not selected!</string>
     <string name="errorFieldsNotFilled">Some fields are missing...</string>
-    <string name="wrongUser">Wrong user or password!</string>
+    <string name="wrongData">Wrong data...</string>
+    <string name="user">User</string>
 
 </resources>

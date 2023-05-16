@@ -21,7 +21,8 @@
     <string name="stay_tuned">Stay tuned!</string>
     <string name="publicar">Publicar</string>
     <string name="icono_de_la_app">Icono de la app</string>
-    <string name="usuario">Usuario</string>
+    <string name="email">Email</string>
+    <string name="user">Usuario</string>
     <string name="contrase_a">Contraseña</string>
     <string name="no_tienes_cuenta_reg_strate">¿No tienes cuenta? Regístrate</string>
     <string name="iniciar_sesi_n">Iniciar Sesión</string>
@@ -34,7 +35,7 @@
     <string name="ya_tienes_cuenta_inicia_sesi_n">¿Ya tienes cuenta? Inicia sesión</string>
     <string name="addTune">"Escribe un mensaje tune "</string>
     <string name="imgNoticia">Imagen de la noticia</string>
-    <string name="wrongUser">¡Usuario o contraseña erróneos!</string>
+    <string name="wrongData">Datos erróneos...</string>
     <string name="correctUser">¡Usuario y contraseña correctos!</string>
     <string name="fillBothFields">¡Rellena ambos campos!</string>
     <string name="fetching">Buscando artículos...</string>

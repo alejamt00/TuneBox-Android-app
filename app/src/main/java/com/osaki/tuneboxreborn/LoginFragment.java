@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -70,16 +71,16 @@ public class LoginFragment extends Fragment {
         return (!usernameET.getText().toString().equals("")&&!passET.getText().toString().equals(""));
     }
 
-    public void login(String user, String pass){
-        fAuth.signInWithEmailAndPassword(user,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+    public void login(String correo, String pass){
+        fAuth.signInWithEmailAndPassword(correo,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Toast toast = Toast.makeText(getContext(), "Ennove iniciao", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getContext(), getString(R.string.existError), Toast.LENGTH_SHORT);
                     toast.setMargin(50, 50);
                     toast.show();
                 } else {
-                    Toast toast = Toast.makeText(getContext(), "Ennove mierdon", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getContext(), getString(R.string.wrongData), Toast.LENGTH_SHORT);
                     toast.setMargin(50, 50);
                     toast.show();
                 }
@@ -106,7 +107,7 @@ public class LoginFragment extends Fragment {
         fAuth = FirebaseAuth.getInstance();
 
         loginButton = view.findViewById(R.id.bLogin);
-        usernameET = view.findViewById(R.id.userBox);
+        usernameET = view.findViewById(R.id.emailBox);
         passET = view.findViewById(R.id.passBox);
         regText = view.findViewById(R.id.registerText);
 
@@ -118,6 +119,10 @@ public class LoginFragment extends Fragment {
                         loginButton.setTextColor(Color.WHITE);
                         if(dataFilled()) {
                             login(usernameET.getText().toString(),passET.getText().toString());
+                        } else {
+                            Toast toast = Toast.makeText(getContext(), getString(R.string.fillBothFields), Toast.LENGTH_SHORT);
+                            toast.setMargin(50, 50);
+                            toast.show();
                         }
                         break;
                     case MotionEvent.ACTION_UP:
@@ -136,11 +141,18 @@ public class LoginFragment extends Fragment {
                 switch(event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         regText.setTextColor(Color.BLACK);
-                        if(dataFilled()) {
-                            Toast toast = Toast.makeText(getContext(), getString(R.string.wrongUser), Toast.LENGTH_SHORT);
-                            toast.setMargin(50, 50);
-                            toast.show();
-                        }
+                        FragmentTransaction ft = getParentFragmentManager().beginTransaction()
+                                .setCustomAnimations(
+                                        R.anim.fade_in,
+                                        R.anim.fade_out,
+                                        R.anim.fade_in,
+                                        R.anim.fade_out
+                                );
+
+                        RegisterFragment tlf = new RegisterFragment();
+                        ft.replace(R.id.fragmentContainerView,tlf).commit();
+                        ft.addToBackStack(null);
+
                         break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
