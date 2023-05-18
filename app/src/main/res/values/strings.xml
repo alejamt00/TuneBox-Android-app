@@ -44,4 +44,6 @@
     <string name="existError">¡Ese usuario ya existe!</string>
     <string name="avatarError">¡Avatar no seleccionado!</string>
     <string name="errorFieldsNotFilled">Falta rellenar algún campo...</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

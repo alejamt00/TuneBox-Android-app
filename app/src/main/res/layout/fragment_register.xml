@@ -14,8 +14,9 @@
         android:layout_margin="15dp"
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="30dp"
+        app:cardElevation="50dp"
         app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -137,19 +138,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints=""
-                    android:textSize="20sp"
                     android:background="@drawable/borde_edittext"
+                    android:clickable="true"
                     android:ems="10"
+                    android:focusable="false"
                     android:fontFamily="sans-serif"
                     android:hint="@string/fecha_de_nacimiento"
                     android:inputType="date"
-                    android:focusable="false"
-                    android:clickable="true"
                     android:maxLines="1"
                     android:minHeight="48dp"
                     android:paddingStart="10dp"
                     android:textColor="@color/main_purple_variant_bright"
-                    android:textColorHint="#88BF40BF" />
+                    android:textColorHint="#88BF40BF"
+                    android:textSize="20sp" />
 
                 <Space
                     android:layout_width="match_parent"
