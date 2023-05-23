@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">TuneBox</string>
-    <string name="api_news_key" translatable="false">1110e8826ffd4657a278fa05f8978ce3</string>
     <string name="bsString">Banda Sonora</string>
     <string name="rockString">Rock</string>
     <string name="indieString">Indie</string>
@@ -35,7 +34,6 @@
     <string name="registrar">REGISTRAR</string>
     <string name="ya_tienes_cuenta_inicia_sesi_n">¿Ya tienes cuenta? Inicia sesión</string>
     <string name="addTune">"Escribe un mensaje tune "</string>
-    <string name="imgNoticia">Imagen de la noticia</string>
     <string name="wrongData">Datos erróneos...</string>
     <string name="correctUser">¡Usuario y contraseña correctos!</string>
     <string name="fillBothFields">¡Rellena ambos campos!</string>
@@ -44,6 +42,5 @@
     <string name="existError">¡Ese usuario ya existe!</string>
     <string name="avatarError">¡Avatar no seleccionado!</string>
     <string name="errorFieldsNotFilled">Falta rellenar algún campo...</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="googleButtonSText">Botón para iniciar sesión con Google</string>
 </resources>

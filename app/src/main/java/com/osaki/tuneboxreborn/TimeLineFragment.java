@@ -37,7 +37,7 @@ import java.util.Locale;
  */
 public class TimeLineFragment extends Fragment {
 
-    private ImageView ivAvatar, ivNews;
+    private ImageView ivAvatar, ivConf;
     private FloatingActionButton fabMsg;
     private String tune;
     private ArrayList<TuneMsg> listaTunes;
@@ -118,7 +118,7 @@ public class TimeLineFragment extends Fragment {
 
         listaTunes = new ArrayList<TuneMsg>();
         ivAvatar = view.findViewById(R.id.ivAvatar);
-        ivNews = view.findViewById(R.id.newsButton);
+        ivConf = view.findViewById(R.id.confButton);
         Bitmap bmp = BitmapFactory.decodeFile(getContext().getExternalFilesDir(null)+"/avatars/"+getArguments().getString("avatar"));
         ivAvatar.setImageBitmap(bmp);
         fabMsg = view.findViewById(R.id.addTuneMsg);
@@ -191,26 +191,23 @@ public class TimeLineFragment extends Fragment {
         ivAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                ProfileFragment pff = new ProfileFragment();
-                pff.setArguments(getArguments());
-                ft.replace(R.id.fragmentContainerView,pff).commit();
-                ft.addToBackStack(null);
-
+                Toast toast = Toast.makeText(getContext(), "Fragmento de perfil", Toast.LENGTH_SHORT);
+                toast.setMargin(50, 50);
+                toast.show();
             }
         });
 
-        /** Lanza el fragmento de noticias, si están en español las muestra de mexico porque la api
-         * no tiene contenido de españa. No cargan imagenes en español porque no tienen imagenes en
-         * la api
-         */
-        ivNews.setOnClickListener(new View.OnClickListener() {
+
+        ivConf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NewsFragment nf = new NewsFragment();
-                nf.setArguments(getArguments());
-                ft.replace(R.id.fragmentContainerView,nf).commit();
-                ft.addToBackStack(null);
+//                NewsFragment nf = new NewsFragment();
+//                nf.setArguments(getArguments());
+//                ft.replace(R.id.fragmentContainerView,nf).commit();
+//                ft.addToBackStack(null);
+                Toast toast = Toast.makeText(getContext(), "Fragmento de configuración", Toast.LENGTH_SHORT);
+                toast.setMargin(50, 50);
+                toast.show();
             }
         });
 

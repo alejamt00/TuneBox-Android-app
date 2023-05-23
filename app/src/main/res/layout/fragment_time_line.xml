@@ -85,7 +85,7 @@
                         android:layout_weight="1" />
 
                     <ImageView
-                        android:id="@+id/newsButton"
+                        android:id="@+id/confButton"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:clickable="true"
