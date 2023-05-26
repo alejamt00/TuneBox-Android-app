@@ -76,9 +76,21 @@ public class LoginFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Toast toast = Toast.makeText(getContext(), getString(R.string.existError), Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getContext(), getString(R.string.correctUser), Toast.LENGTH_SHORT);
                     toast.setMargin(50, 50);
                     toast.show();
+                    FragmentTransaction ft = getParentFragmentManager().beginTransaction()
+                            .setCustomAnimations(
+                                    R.anim.fade_in,
+                                    R.anim.fade_out,
+                                    R.anim.fade_in,
+                                    R.anim.fade_out
+                            );
+
+                    TimeLineFragment tlf = new TimeLineFragment();
+                    ft.replace(R.id.fragmentContainerView,tlf).commit();
+                    ft.addToBackStack(null);
+
                 } else {
                     Toast toast = Toast.makeText(getContext(), getString(R.string.wrongData), Toast.LENGTH_SHORT);
                     toast.setMargin(50, 50);
@@ -105,6 +117,21 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         fAuth = FirebaseAuth.getInstance();
+
+
+        if (fAuth.getCurrentUser() != null){
+            FragmentTransaction ft = getParentFragmentManager().beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.fade_in,
+                            R.anim.fade_out,
+                            R.anim.fade_in,
+                            R.anim.fade_out
+                    );
+
+            TimeLineFragment tlf = new TimeLineFragment();
+            ft.replace(R.id.fragmentContainerView,tlf).commit();
+            ft.addToBackStack(null);
+        }
 
         loginButton = view.findViewById(R.id.bLogin);
         usernameET = view.findViewById(R.id.emailBox);

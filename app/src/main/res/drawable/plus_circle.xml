@@ -19,7 +19,7 @@
       android:pathData="M865,500C865,701.6 701.6,865 500,865C298.4,865 135,701.6 135,500C135,298.4 298.4,135 500,135C701.6,135 865,298.4 865,500Z"
       android:strokeLineJoin="miter"
       android:strokeWidth="0"
-      android:fillColor="#BF40BF"
+      android:fillColor="#FFbf407f"
       android:fillType="nonZero"
       android:strokeColor="#00000000"
       android:strokeLineCap="butt"/>

@@ -23,7 +23,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -80,8 +86,6 @@ public class TimeLineFragment extends Fragment {
      */
     public void loadTunes(){
 
-        String timeline = getArguments().getString("music_genre");
-
     }
 
     /**
@@ -119,8 +123,6 @@ public class TimeLineFragment extends Fragment {
         listaTunes = new ArrayList<TuneMsg>();
         ivAvatar = view.findViewById(R.id.ivAvatar);
         ivConf = view.findViewById(R.id.confButton);
-        Bitmap bmp = BitmapFactory.decodeFile(getContext().getExternalFilesDir(null)+"/avatars/"+getArguments().getString("avatar"));
-        ivAvatar.setImageBitmap(bmp);
         fabMsg = view.findViewById(R.id.addTuneMsg);
         tune = "";
 
@@ -139,7 +141,7 @@ public class TimeLineFragment extends Fragment {
                 );
         ;
 
-        recyclerAdapter = new RecyclerAdapter(listaTunes,getContext(), ft, getArguments().getString("id"));
+        recyclerAdapter = new RecyclerAdapter(listaTunes,getContext(), ft, "1");
         recyclerTunes.setAdapter(recyclerAdapter);
 
 
@@ -154,8 +156,6 @@ public class TimeLineFragment extends Fragment {
                 EditText editText = vAlert.findViewById(R.id.editTextTuneMsg);
                 Button bAccept = vAlert.findViewById(R.id.bPublish);
                 Button bCancel = vAlert.findViewById(R.id.bCancel);
-                ImageView ivTune = vAlert.findViewById(R.id.ivAvatarTune);
-                ivTune.setImageBitmap(bmp);
 
                 AlertDialog alert = builder.create();
 
@@ -167,10 +167,18 @@ public class TimeLineFragment extends Fragment {
 
                         if(!tune.equals("")){
                             String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-                            TuneMsg tuneMsg = new TuneMsg("",getArguments().getString("id"),getArguments().getString("public_name"), getArguments().getString("username"), getArguments().getString("avatar"), tune, date, getArguments().getString("music_genre"));
-                            tuneMsg.setId(Long.toString(uploadTune(tuneMsg, values)));
-                            listaTunes.add(0, tuneMsg);
-                            recyclerAdapter.notifyDataSetChanged();
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(user.getUid());
+                            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    User u = documentSnapshot.toObject(User.class);
+                                    TuneMsg tuneMsg = new TuneMsg("id","authID",u.getpName(), u.getUser(), "avatar", tune, date, "music_genre");
+                                    tuneMsg.setId(Long.toString(uploadTune(tuneMsg, values)));
+                                    listaTunes.add(0, tuneMsg);
+                                    recyclerAdapter.notifyDataSetChanged();
+                                }
+                            });
                         }
                         alert.dismiss();
                     }
@@ -201,14 +209,20 @@ public class TimeLineFragment extends Fragment {
         ivConf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                NewsFragment nf = new NewsFragment();
-//                nf.setArguments(getArguments());
-//                ft.replace(R.id.fragmentContainerView,nf).commit();
-//                ft.addToBackStack(null);
                 Toast toast = Toast.makeText(getContext(), "Fragmento de configuración", Toast.LENGTH_SHORT);
                 toast.setMargin(50, 50);
                 toast.show();
-            }
+                FirebaseAuth.getInstance().signOut();
+                FragmentTransaction ft = getParentFragmentManager().beginTransaction()
+                        .setCustomAnimations(
+                                R.anim.fade_in,
+                                R.anim.fade_out,
+                                R.anim.fade_in,
+                                R.anim.fade_out
+                        );
+
+                LoginFragment loginFragment = new LoginFragment();
+                ft.replace(R.id.fragmentContainerView, loginFragment).commit();            }
         });
 
 

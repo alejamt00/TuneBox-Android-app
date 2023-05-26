@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/app_bg"
-    android:gravity="center"
     tools:context=".RegisterFragment">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="15dp"
+        android:layout_margin="10dp"
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="30dp"
         app:cardElevation="50dp"
@@ -21,8 +20,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="15dp"
-            android:gravity="center|top"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
             android:orientation="vertical">
 
             <LinearLayout
@@ -59,16 +60,33 @@
 
             </LinearLayout>
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:gravity="center"
                 android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/nameBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints=""
+                    android:background="@drawable/borde_edittext"
+                    android:ems="10"
+                    android:fontFamily="sans-serif"
+                    android:gravity="center|start"
+                    android:hint="@string/pName"
+                    android:inputType="text"
+                    android:minHeight="48dp"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/main_purple_variant_bright"
+                    android:textColorHint="#88BF40BF"
+                    android:textSize="20sp" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp" />
 
                 <EditText
                     android:id="@+id/userBox"
@@ -80,7 +98,7 @@
                     android:fontFamily="sans-serif"
                     android:gravity="center|start"
                     android:hint="@string/user"
-                    android:inputType="textPassword"
+                    android:inputType="text"
                     android:minHeight="48dp"
                     android:paddingStart="10dp"
                     android:textColor="@color/main_purple_variant_bright"
@@ -89,7 +107,7 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="20dp" />
+                    android:layout_height="15dp" />
 
                 <EditText
                     android:id="@+id/emailBox"
@@ -110,7 +128,7 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="20dp" />
+                    android:layout_height="15dp" />
 
                 <EditText
                     android:id="@+id/passBox"
@@ -131,7 +149,7 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="20dp" />
+                    android:layout_height="15dp" />
 
                 <EditText
                     android:id="@+id/dateBox"
@@ -154,7 +172,7 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="20dp" />
+                    android:layout_height="15dp" />
 
                 <Spinner
                     android:id="@+id/spinnerGenre"
@@ -163,7 +181,6 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/spinner_item_bg"
                     android:contentDescription="@string/genreSpinnerSpeakable"
-                    android:dropDownSelector="@drawable/menu"
                     android:minHeight="48dp"
                     android:overlapAnchor="false"
                     android:popupBackground="@drawable/spinner_item_bg"
@@ -207,13 +224,20 @@
                     android:text="@string/no_tienes_cuenta_reg_strate"
                     android:textAlignment="center"
                     android:textColor="@color/main_purple"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:textStyle="italic" />
 
             </LinearLayout>
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
     </androidx.cardview.widget.CardView>
 
 
-</LinearLayout>
+</FrameLayout>
