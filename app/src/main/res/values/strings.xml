@@ -46,4 +46,8 @@
     <string name="errorFieldsNotFilled">Falta rellenar algún campo...</string>
     <string name="googleButtonSText">Botón para iniciar sesión con Google</string>
     <string name="passLengthError">La contraseña debe tener una longitud 6 o superior.</string>
+    <string name="existUser">Ese nombre de usuario ya existe...</string>
+    <string name="minEdadError">Debes tener más de 13 años...</string>
+    <string name="existEmailError">Ya existe una cuenta con este correo electrónico...</string>
+    <string name="errorCreate">Ocurrió un error al crear la cuenta...</string>
 </resources>

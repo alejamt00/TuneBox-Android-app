@@ -86,8 +86,9 @@
 
                     <ImageView
                         android:id="@+id/confButton"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:padding="5dp"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:clickable="true"
                         android:contentDescription="@string/avatarSpeakableText"
                         android:focusable="true"

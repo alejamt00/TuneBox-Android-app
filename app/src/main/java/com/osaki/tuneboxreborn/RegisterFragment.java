@@ -29,7 +29,10 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +52,7 @@ public class RegisterFragment extends Fragment {
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
     private String userID;
+    private Boolean minEdad;
 
 
     /**
@@ -92,6 +96,7 @@ public class RegisterFragment extends Fragment {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         progressBar = view.findViewById(R.id.progressBar);
+        minEdad = false;
 
         nameBox = view.findViewById(R.id.nameBox);
         userBox = view.findViewById(R.id.userBox);
@@ -136,6 +141,21 @@ public class RegisterFragment extends Fragment {
                 // +1 because January is zero
                 final String selectedDate = twoDigits(day) + " / " + twoDigits((month+1)) + " / " + year;
                 dateBox.setText(selectedDate);
+                minEdad = false;
+
+                // Verificar si la fecha seleccionada es menor a una cierta edad
+                int ageLimit = 13;
+                Calendar selectedCalendar = Calendar.getInstance();
+                selectedCalendar.set(year, month, day);
+                Calendar currentCalendar = Calendar.getInstance();
+                currentCalendar.add(Calendar.YEAR, -ageLimit);
+
+                // Comparar los dos objetos Calendar para ver si la fecha seleccionada es anterior a la fecha límite
+                if (selectedCalendar.compareTo(currentCalendar) <= 0) {
+                    // (el usuario tiene al menos ageLimit años)
+                    minEdad = true;
+                }
+
             }
         });
 
@@ -148,7 +168,7 @@ public class RegisterFragment extends Fragment {
         String pass = passBox.getText().toString();
         String genre = genreSpinner.getSelectedItem().toString();
         String dateBirth = dateBox.getText().toString();
-        String userName = userBox.getText().toString();
+        String userName = userBox.getText().toString().toLowerCase();
         String pName = nameBox.getText().toString();
 
         if (!email.matches(emailPattern)) {
@@ -160,47 +180,73 @@ public class RegisterFragment extends Fragment {
             toast.setMargin(50, 50);
             toast.show();
         } else {
+            Query query = fStore.collection("users").whereEqualTo("user", userName);
             progressBar.setVisibility(View.VISIBLE);
-            fAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            Log.d("RegisterDeb", "Buscando usuarios con userName: " + userName);
+            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
-                        userID = fAuth.getCurrentUser().getUid();
-                        DocumentReference documentReference = fStore.collection("users").document(userID);
-                        Map<String,Object> user = new HashMap<>();
-                        user.put("pName",pName);
-                        user.put("user",userName);
-                        user.put("dateBirth",dateBirth);
-                        user.put("genre",genre);
-                        user.put("pName",pName);
-                        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Log.d("RegisterDeb", "Datos registrados correctamente para usuario "+ userID);
-                            }
-                        });
-                        progressBar.setVisibility(View.INVISIBLE);
-                        Toast toast = Toast.makeText(getContext(), getString(R.string.registerSuccess), Toast.LENGTH_SHORT);
-                        toast.setMargin(50, 50);
-                        toast.show();
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            public void run() {
-                                getParentFragmentManager().popBackStackImmediate();
-                            }
-                        }, 500);
+                        if (task.getResult().isEmpty()) {
+                            // No se encontró ningún usuario con el userName dado
+                            if(minEdad){
+                                fAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            userID = fAuth.getCurrentUser().getUid();
+                                            DocumentReference documentReference = fStore.collection("users").document(userID);
+                                            Map<String,Object> user = new HashMap<>();
+                                            user.put("pName",pName);
+                                            user.put("user",userName);
+                                            user.put("dateBirth",dateBirth);
+                                            user.put("genre",genre);
+                                            user.put("pName",pName);
+                                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void unused) {
+                                                    Log.d("RegisterDeb", "Datos registrados correctamente para usuario "+ userID);
+                                                }
+                                            });
+                                            progressBar.setVisibility(View.INVISIBLE);
+                                            Toast toast = Toast.makeText(getContext(), getString(R.string.registerSuccess), Toast.LENGTH_SHORT);
+                                            toast.setMargin(50, 50);
+                                            toast.show();
+                                            Handler handler = new Handler();
+                                            handler.postDelayed(new Runnable() {
+                                                public void run() {
+                                                    getParentFragmentManager().popBackStackImmediate();
+                                                }
+                                            }, 500);
 
-                    } else {
-                        progressBar.setVisibility(View.INVISIBLE);
-                        Exception e = task.getException();
-                        String errorMessage;
-                        if (e instanceof FirebaseAuthUserCollisionException) {
-                            errorMessage = "Ya existe una cuenta con este correo electrónico.";
+                                        } else {
+                                            progressBar.setVisibility(View.INVISIBLE);
+                                            Exception e = task.getException();
+                                            String errorMessage;
+                                            if (e instanceof FirebaseAuthUserCollisionException) {
+                                                errorMessage = getString(R.string.existEmailError);
+                                            } else {
+                                                errorMessage = getString(R.string.errorCreate);
+                                            }
+                                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+
+                            } else {
+                                Toast toast = Toast.makeText(getContext(), getString(R.string.existUser), Toast.LENGTH_SHORT);
+                                toast.setMargin(50, 50);
+                                toast.show();
+                            }
                         } else {
-                            errorMessage = "Ocurrió un error al crear la cuenta.";
+                            // Se encontró al menos un usuario con el userName dado
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Toast toast = Toast.makeText(getContext(), getString(R.string.existUser), Toast.LENGTH_SHORT);
+                            toast.setMargin(50, 50);
+                            toast.show();
                         }
-                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-
+                    } else {
+                        // Ocurrió un error al realizar la consulta
                     }
                 }
             });
