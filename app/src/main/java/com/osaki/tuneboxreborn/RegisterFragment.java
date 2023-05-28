@@ -172,13 +172,9 @@ public class RegisterFragment extends Fragment {
         String pName = nameBox.getText().toString();
 
         if (!email.matches(emailPattern)) {
-            Toast toast = Toast.makeText(getContext(), getString(R.string.notValidEmail), Toast.LENGTH_SHORT);
-            toast.setMargin(50, 50);
-            toast.show();
+            Toast.makeText(getContext(), getString(R.string.notValidEmail), Toast.LENGTH_SHORT).show();
         } else if (passBox.getText().toString().trim().length() < 6) {
-            Toast toast = Toast.makeText(getContext(), getString(R.string.passLengthError), Toast.LENGTH_SHORT);
-            toast.setMargin(50, 50);
-            toast.show();
+            Toast.makeText(getContext(), getString(R.string.passLengthError), Toast.LENGTH_SHORT).show();
         } else {
             Query query = fStore.collection("users").whereEqualTo("user", userName);
             progressBar.setVisibility(View.VISIBLE);
@@ -186,8 +182,11 @@ public class RegisterFragment extends Fragment {
             query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    Log.d("RegisterDeb", "onComplete");
                     if (task.isSuccessful()) {
+                        Log.d("RegisterDeb", "isSuccessful");
                         if (task.getResult().isEmpty()) {
+                            Log.d("RegisterDeb", "isEmpty");
                             // No se encontró ningún usuario con el userName dado
                             if(minEdad){
                                 fAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -209,9 +208,7 @@ public class RegisterFragment extends Fragment {
                                                 }
                                             });
                                             progressBar.setVisibility(View.INVISIBLE);
-                                            Toast toast = Toast.makeText(getContext(), getString(R.string.registerSuccess), Toast.LENGTH_SHORT);
-                                            toast.setMargin(50, 50);
-                                            toast.show();
+                                            Toast.makeText(getContext(), getString(R.string.registerSuccess), Toast.LENGTH_SHORT).show();
                                             Handler handler = new Handler();
                                             handler.postDelayed(new Runnable() {
                                                 public void run() {
@@ -234,19 +231,23 @@ public class RegisterFragment extends Fragment {
                                 });
 
                             } else {
-                                Toast toast = Toast.makeText(getContext(), getString(R.string.existUser), Toast.LENGTH_SHORT);
-                                toast.setMargin(50, 50);
-                                toast.show();
+                                progressBar.setVisibility(View.INVISIBLE);
+                                Toast.makeText(getContext(), getString(R.string.minEdadError), Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             // Se encontró al menos un usuario con el userName dado
+                            Log.d("RegisterDeb", "isNotEmpty");
                             progressBar.setVisibility(View.INVISIBLE);
-                            Toast toast = Toast.makeText(getContext(), getString(R.string.existUser), Toast.LENGTH_SHORT);
-                            toast.setMargin(50, 50);
-                            toast.show();
+                            Toast.makeText(getContext(), getString(R.string.existUser), Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         // Ocurrió un error al realizar la consulta
+                        // Manejo de errores
+                        try{
+                            Log.d("RegisterDeb", "Error al realizar la consulta: " + task.getException().getMessage());
+                        } catch (Exception e){
+                            Toast.makeText(getContext(), task.getException().toString(), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });
