@@ -6,6 +6,7 @@ public class User {
     private String user;
     private String dateBirth;
     private String genre;
+    private String avatarUrl;
 
     public User(){
     }
@@ -40,5 +41,13 @@ public class User {
 
     public void setGenre(String genre) {
         this.genre = genre;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }

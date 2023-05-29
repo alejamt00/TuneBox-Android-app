@@ -15,6 +15,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 
@@ -160,8 +163,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
          * @param tMsg Mensaje a mostrar
          */
         public void bindData(TuneMsg tMsg){
-            Bitmap bmp = BitmapFactory.decodeFile(c.getExternalFilesDir(null)+"/avatars/"+tMsg.getAvatar());
-            avatarIV.setImageBitmap(bmp);
+            Glide.with(itemView.getContext()).load(tMsg.getAvatar()).into(avatarIV);
             publicNameTV.setText(tMsg.getPublicName());
             userNameTV.setText("@" + tMsg.getUserName());
             tuneMsgTV.setText(tMsg.getMsg());

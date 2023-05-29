@@ -1,7 +1,11 @@
 package com.osaki.tuneboxreborn;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -11,10 +15,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -31,6 +40,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -42,8 +54,11 @@ import java.util.Map;
  */
 public class RegisterFragment extends Fragment {
 
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+
     private String[] genreArray;
     private Spinner genreSpinner;
+    private ImageView avatarButton;
     private CustomSpinnerAdapter genreSpinnerAdapter;
     private ProgressBar progressBar;
     private EditText nameBox, userBox, mailBox, passBox, dateBox;
@@ -53,6 +68,8 @@ public class RegisterFragment extends Fragment {
     private FirebaseFirestore fStore;
     private String userID;
     private Boolean minEdad;
+    private Uri avatarUri;
+    private Boolean avatarSelectad;
 
 
     /**
@@ -97,12 +114,15 @@ public class RegisterFragment extends Fragment {
         fStore = FirebaseFirestore.getInstance();
         progressBar = view.findViewById(R.id.progressBar);
         minEdad = false;
+        avatarSelectad = false;
 
+        avatarButton = view.findViewById(R.id.ivAvatar);
         nameBox = view.findViewById(R.id.nameBox);
         userBox = view.findViewById(R.id.userBox);
         mailBox = view.findViewById(R.id.emailBox);
         passBox = view.findViewById(R.id.passBox);
         dateBox = view.findViewById(R.id.dateBox);
+
         genreArray = new String[11];
         genreArray[0] = getString(R.string.genreString);
         genreArray[1] = getString(R.string.bsString);
@@ -207,6 +227,33 @@ public class RegisterFragment extends Fragment {
                                                     Log.d("RegisterDeb", "Datos registrados correctamente para usuario "+ userID);
                                                 }
                                             });
+
+                                            // Obtener la referencia al almacenamiento de Firebase
+                                            FirebaseStorage fStorage = FirebaseStorage.getInstance();
+
+                                            // Crear una referencia al archivo de imagen en el almacenamiento
+                                            StorageReference avatarRef = fStorage.getReference().child("avatars/" + userID + ".jpg");
+
+                                            // Subir el archivo de imagen
+                                            if(avatarSelectad){
+                                                UploadTask uploadTask = avatarRef.putFile(avatarUri);
+                                                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                        // Obtener la URL de descarga de la imagen
+                                                        avatarRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                            @Override
+                                                            public void onSuccess(Uri uri) {
+                                                                // Guardar la URL de descarga en el documento del usuario
+                                                                documentReference.update("avatarUrl", uri.toString());
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            } else {
+                                                documentReference.update("avatarUrl", "https://firebasestorage.googleapis.com/v0/b/tunebox-reborn.appspot.com/o/defaultAvatar.png?alt=media&token=151ff5f8-d1fa-4f2a-be0a-353dcca8f6c3");
+                                            }
+
                                             progressBar.setVisibility(View.INVISIBLE);
                                             Toast.makeText(getContext(), getString(R.string.registerSuccess), Toast.LENGTH_SHORT).show();
                                             Handler handler = new Handler();
@@ -277,6 +324,30 @@ public class RegisterFragment extends Fragment {
                 showDatePickerDialog();
             }
         });
+
+        avatarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                pickImageLauncher.launch(Intent.createChooser(intent, "Select Picture"));
+
+            }
+        });
+
+        pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null && result.getData().getData() != null) {
+                    // Obtener la URI de la imagen seleccionada
+                    avatarUri = result.getData().getData();
+                    avatarButton.setImageURI(avatarUri);
+                    avatarSelectad = true;
+                }
+            }
+        });
+
 
         registerB.setOnClickListener(new View.OnClickListener() {
             @Override

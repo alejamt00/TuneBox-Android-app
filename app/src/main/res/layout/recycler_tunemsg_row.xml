@@ -75,12 +75,12 @@
                     android:layout_weight="0"
                     android:text="PlaceHolderName"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 
                 <Space
-                    android:layout_width="10dp"
+                    android:layout_width="5dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0" />
 
@@ -91,7 +91,7 @@
                     android:layout_weight="0"
                     android:text="placeHolderUser"
                     android:textColor="@android:color/darker_gray"
-                    android:textSize="18sp"
+                    android:textSize="15sp"
                     android:textStyle="italic"
                     tools:ignore="HardcodedText" />
 

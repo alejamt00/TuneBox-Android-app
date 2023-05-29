@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,6 +51,7 @@ public class TimeLineFragment extends Fragment {
     private RecyclerView recyclerTunes;
     private RecyclerAdapter recyclerAdapter;
     private SQLiteDatabase dbR, dbW;
+    private User user;
 
 
 
@@ -126,6 +128,20 @@ public class TimeLineFragment extends Fragment {
         fabMsg = view.findViewById(R.id.addTuneMsg);
         tune = "";
 
+        //Get data from logged user
+        FirebaseUser uFire = FirebaseAuth.getInstance().getCurrentUser();
+        DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(uFire.getUid());
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                user = documentSnapshot.toObject(User.class);
+                //Carga desde la url de firabase en formato String el avatar correcto
+                Glide.with(getContext()).load(user.getAvatarUrl()).into(ivAvatar);
+
+            }
+        });
+
+
         recyclerTunes = (RecyclerView) view.findViewById(R.id.recyclerListTunes);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(view.getContext());
         recyclerTunes.setLayoutManager(linearLayoutManager);
@@ -167,18 +183,10 @@ public class TimeLineFragment extends Fragment {
 
                         if(!tune.equals("")){
                             String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(user.getUid());
-                            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    User u = documentSnapshot.toObject(User.class);
-                                    TuneMsg tuneMsg = new TuneMsg("id","authID",u.getpName(), u.getUser(), "avatar", tune, date, "music_genre");
-                                    tuneMsg.setId(Long.toString(uploadTune(tuneMsg, values)));
-                                    listaTunes.add(0, tuneMsg);
-                                    recyclerAdapter.notifyDataSetChanged();
-                                }
-                            });
+                            TuneMsg tuneMsg = new TuneMsg("id","authID",user.getpName(), user.getUser(), user.getAvatarUrl(), tune, date, user.getGenre());
+                            tuneMsg.setId(Long.toString(uploadTune(tuneMsg, values)));
+                            listaTunes.add(0, tuneMsg);
+                            recyclerAdapter.notifyDataSetChanged();
                         }
                         alert.dismiss();
                     }

@@ -51,7 +51,7 @@
                             android:layout_height="150dp"
                             android:contentDescription="@string/avatar_del_usuario"
                             android:scaleType="centerCrop"
-                            app:srcCompat="@drawable/ic_launcher_background" />
+                            app:srcCompat="@drawable/defaultavatar" />
 
                     </androidx.cardview.widget.CardView>
 
@@ -223,7 +223,7 @@
                     android:focusable="true"
                     android:fontFamily="sans-serif"
                     android:minHeight="48dp"
-                    android:text="@string/no_tienes_cuenta_reg_strate"
+                    android:text="@string/ya_tienes_cuenta_inicia_sesi_n"
                     android:textAlignment="center"
                     android:textColor="@color/main_purple"
                     android:textSize="16sp"
