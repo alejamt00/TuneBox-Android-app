@@ -2,10 +2,10 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/main_purple" />
+            <solid android:color="@color/main_purple_variant_bright" />
             <corners android:radius="6dp"/>
             <stroke android:width="2dp"
-                android:color="@color/main_purple"/>
+                android:color="@color/main_purple_variant_bright"/>
         </shape>
     </item>
 
@@ -14,7 +14,7 @@
             <solid android:color="@android:color/transparent" />
             <corners android:radius="6dp"/>
             <stroke android:width="2dp"
-                android:color="@color/main_purple"/>
+                android:color="@color/main_purple_variant_bright"/>
         </shape>
     </item>
 </selector>

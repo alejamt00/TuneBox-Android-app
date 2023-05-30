@@ -10,7 +10,7 @@
     <string name="technoString">Techno</string>
     <string name="hiphopString">Hip Hop</string>
     <string name="flamencoString">Flamenco</string>
-    <string name="genreString">Selecciona un género</string>
+    <string name="genreString">Selecciona un género musical</string>
     <string name="avatarSpeakableText">Avatar de tu perfil</string>
     <string name="signGoogle">¡Inicia sesión con Google!</string>
     <string name="buttonBackSpeakableText">Botón para ir hacia el anterior fragmento</string>
@@ -50,4 +50,8 @@
     <string name="minEdadError">Debes tener más de 13 años...</string>
     <string name="existEmailError">Ya existe una cuenta con este correo electrónico...</string>
     <string name="errorCreate">Ocurrió un error al crear la cuenta...</string>
+    <string name="bChangeAvatarText">Cambiar avatar</string>
+    <string name="bChangeUserName">Cambiar nombre de usuario</string>
+    <string name="bChangeFavGenre">Cambiar gusto musical</string>
+    <string name="bDisconnect">Cerrar sesión</string>
 </resources>

@@ -15,9 +15,13 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.transition.Fade;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -128,6 +132,15 @@ public class TimeLineFragment extends Fragment {
         fabMsg = view.findViewById(R.id.addTuneMsg);
         tune = "";
 
+        // Infla el layout
+        View loadingView = inflater.inflate(R.layout.dialog_progress, null);
+
+        // Agrega la vista a la vista raíz de la actividad
+        ViewGroup rootView = getActivity().findViewById(android.R.id.content);
+        rootView.addView(loadingView);
+
+
+
         //Get data from logged user
         FirebaseUser uFire = FirebaseAuth.getInstance().getCurrentUser();
         DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(uFire.getUid());
@@ -137,7 +150,9 @@ public class TimeLineFragment extends Fragment {
                 user = documentSnapshot.toObject(User.class);
                 //Carga desde la url de firabase en formato String el avatar correcto
                 Glide.with(getContext()).load(user.getAvatarUrl()).into(ivAvatar);
-
+                Fade fade = new Fade();
+                TransitionManager.beginDelayedTransition(rootView,fade);
+                rootView.removeView(loadingView);
             }
         });
 
@@ -172,6 +187,8 @@ public class TimeLineFragment extends Fragment {
                 EditText editText = vAlert.findViewById(R.id.editTextTuneMsg);
                 Button bAccept = vAlert.findViewById(R.id.bPublish);
                 Button bCancel = vAlert.findViewById(R.id.bCancel);
+                ImageView ivAvatarTune = vAlert.findViewById(R.id.ivAvatarTune);
+                Glide.with(getContext()).load(user.getAvatarUrl()).into(ivAvatarTune);
 
                 AlertDialog alert = builder.create();
 
@@ -204,16 +221,27 @@ public class TimeLineFragment extends Fragment {
         });
 
         /** Lanza el fragmento de perfil de usuario*/
-        ivAvatar.setOnClickListener(new View.OnClickListener() {
+        ivConf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast toast = Toast.makeText(getContext(), "Fragmento de perfil", Toast.LENGTH_SHORT);
-                toast.setMargin(50, 50);
-                toast.show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.MyAlertDialogStyle);
+
+                View vAlert = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_layout_config, null);
+                builder.setView(vAlert);
+//                EditText editText = vAlert.findViewById(R.id.editTextTuneMsg);
+//                Button bAccept = vAlert.findViewById(R.id.bPublish);
+//                Button bCancel = vAlert.findViewById(R.id.bCancel);
+
+
+                AlertDialog alert = builder.create();
+
+
+                alert.show();
             }
         });
 
 
+/*
         ivConf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -232,6 +260,7 @@ public class TimeLineFragment extends Fragment {
                 LoginFragment loginFragment = new LoginFragment();
                 ft.replace(R.id.fragmentContainerView, loginFragment).commit();            }
         });
+*/
 
 
         return view;

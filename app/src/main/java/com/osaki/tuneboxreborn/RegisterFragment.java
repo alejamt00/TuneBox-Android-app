@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.transition.Fade;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +18,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.Inflater;
 
 /**
  * Clase LoginFragment que extiende la clase Fragment.
@@ -60,7 +62,6 @@ public class RegisterFragment extends Fragment {
     private Spinner genreSpinner;
     private ImageView avatarButton;
     private CustomSpinnerAdapter genreSpinnerAdapter;
-    private ProgressBar progressBar;
     private EditText nameBox, userBox, mailBox, passBox, dateBox;
     private Button registerB;
     private String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
@@ -112,7 +113,6 @@ public class RegisterFragment extends Fragment {
     private void initData(View view) {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
-        progressBar = view.findViewById(R.id.progressBar);
         minEdad = false;
         avatarSelectad = false;
 
@@ -183,7 +183,7 @@ public class RegisterFragment extends Fragment {
     }
 
 
-    private void PerformAuth() {
+    private void PerformAuth(LayoutInflater inflater) {
         String email = mailBox.getText().toString();
         String pass = passBox.getText().toString();
         String genre = genreSpinner.getSelectedItem().toString();
@@ -197,7 +197,12 @@ public class RegisterFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.passLengthError), Toast.LENGTH_SHORT).show();
         } else {
             Query query = fStore.collection("users").whereEqualTo("user", userName);
-            progressBar.setVisibility(View.VISIBLE);
+            // Infla el layout
+            View loadingView = inflater.inflate(R.layout.dialog_progress, null);
+
+            // Agrega la vista a la vista raíz de la actividad
+            ViewGroup rootView = getActivity().findViewById(android.R.id.content);
+            rootView.addView(loadingView);
             Log.d("RegisterDeb", "Buscando usuarios con userName: " + userName);
             query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -246,25 +251,40 @@ public class RegisterFragment extends Fragment {
                                                             public void onSuccess(Uri uri) {
                                                                 // Guardar la URL de descarga en el documento del usuario
                                                                 documentReference.update("avatarUrl", uri.toString());
+                                                                Fade fade = new Fade();
+                                                                TransitionManager.beginDelayedTransition(rootView,fade);
+                                                                rootView.removeView(loadingView);
+                                                                Toast.makeText(getContext(), getString(R.string.registerSuccess), Toast.LENGTH_SHORT).show();
+                                                                Handler handler = new Handler();
+                                                                handler.postDelayed(new Runnable() {
+                                                                    public void run() {
+                                                                        getParentFragmentManager().popBackStackImmediate();
+                                                                    }
+                                                                }, 500);
                                                             }
                                                         });
                                                     }
                                                 });
                                             } else {
                                                 documentReference.update("avatarUrl", "https://firebasestorage.googleapis.com/v0/b/tunebox-reborn.appspot.com/o/defaultAvatar.png?alt=media&token=151ff5f8-d1fa-4f2a-be0a-353dcca8f6c3");
+                                                Fade fade = new Fade();
+                                                TransitionManager.beginDelayedTransition(rootView,fade);
+                                                rootView.removeView(loadingView);
+                                                Toast.makeText(getContext(), getString(R.string.registerSuccess), Toast.LENGTH_SHORT).show();
+                                                Handler handler = new Handler();
+                                                handler.postDelayed(new Runnable() {
+                                                    public void run() {
+                                                        getParentFragmentManager().popBackStackImmediate();
+                                                    }
+                                                }, 500);
+
                                             }
 
-                                            progressBar.setVisibility(View.INVISIBLE);
-                                            Toast.makeText(getContext(), getString(R.string.registerSuccess), Toast.LENGTH_SHORT).show();
-                                            Handler handler = new Handler();
-                                            handler.postDelayed(new Runnable() {
-                                                public void run() {
-                                                    getParentFragmentManager().popBackStackImmediate();
-                                                }
-                                            }, 500);
 
                                         } else {
-                                            progressBar.setVisibility(View.INVISIBLE);
+                                            Fade fade = new Fade();
+                                            TransitionManager.beginDelayedTransition(rootView,fade);
+                                            rootView.removeView(loadingView);
                                             Exception e = task.getException();
                                             String errorMessage;
                                             if (e instanceof FirebaseAuthUserCollisionException) {
@@ -278,13 +298,17 @@ public class RegisterFragment extends Fragment {
                                 });
 
                             } else {
-                                progressBar.setVisibility(View.INVISIBLE);
+                                Fade fade = new Fade();
+                                TransitionManager.beginDelayedTransition(rootView,fade);
+                                rootView.removeView(loadingView);
                                 Toast.makeText(getContext(), getString(R.string.minEdadError), Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             // Se encontró al menos un usuario con el userName dado
                             Log.d("RegisterDeb", "isNotEmpty");
-                            progressBar.setVisibility(View.INVISIBLE);
+                            Fade fade = new Fade();
+                            TransitionManager.beginDelayedTransition(rootView,fade);
+                            rootView.removeView(loadingView);
                             Toast.makeText(getContext(), getString(R.string.existUser), Toast.LENGTH_SHORT).show();
                         }
                     } else {
@@ -353,7 +377,7 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(dataFilled()){
-                    PerformAuth();
+                    PerformAuth(inflater);
                 } else {
                     Toast toast = Toast.makeText(getContext(), getString(R.string.errorFieldsNotFilled) + "", Toast.LENGTH_SHORT);
                     toast.setMargin(50, 50);
