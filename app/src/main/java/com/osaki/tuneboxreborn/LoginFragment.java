@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,6 +64,7 @@ public class LoginFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
 
     /**
      * Método para verificar si los campos de nombre de usuario y contraseña están llenos.
@@ -119,7 +121,7 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         fAuth = FirebaseAuth.getInstance();
-
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         if (fAuth.getCurrentUser() != null){
             FragmentTransaction ft = getParentFragmentManager().beginTransaction()
@@ -140,11 +142,6 @@ public class LoginFragment extends Fragment {
         passET = view.findViewById(R.id.passBox);
         regText = view.findViewById(R.id.registerText);
 
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(usernameET.getWindowToken(), 0);
-        imm.hideSoftInputFromWindow(passET.getWindowToken(), 0);
-
-
         loginButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -152,6 +149,9 @@ public class LoginFragment extends Fragment {
                     case MotionEvent.ACTION_DOWN:
                         loginButton.setTextColor(Color.WHITE);
                         if(dataFilled()) {
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(usernameET.getWindowToken(), 0);
+                            imm.hideSoftInputFromWindow(passET.getWindowToken(), 0);
                             login(usernameET.getText().toString(),passET.getText().toString());
                         } else {
                             Toast toast = Toast.makeText(getContext(), getString(R.string.fillBothFields), Toast.LENGTH_SHORT);
