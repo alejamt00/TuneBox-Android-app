@@ -1,6 +1,7 @@
 package com.osaki.tuneboxreborn;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -137,6 +139,11 @@ public class LoginFragment extends Fragment {
         usernameET = view.findViewById(R.id.emailBox);
         passET = view.findViewById(R.id.passBox);
         regText = view.findViewById(R.id.registerText);
+
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(usernameET.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(passET.getWindowToken(), 0);
+
 
         loginButton.setOnTouchListener(new View.OnTouchListener() {
             @Override

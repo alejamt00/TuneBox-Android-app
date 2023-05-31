@@ -216,7 +216,7 @@
                     android:layout_height="13dp" />
 
                 <TextView
-                    android:id="@+id/registerText"
+                    android:id="@+id/loginText"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:clickable="true"

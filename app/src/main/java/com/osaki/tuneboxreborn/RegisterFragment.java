@@ -5,6 +5,7 @@ import static android.app.Activity.RESULT_OK;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.transition.Fade;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,6 +21,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -27,6 +30,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,6 +67,7 @@ public class RegisterFragment extends Fragment {
     private ImageView avatarButton;
     private CustomSpinnerAdapter genreSpinnerAdapter;
     private EditText nameBox, userBox, mailBox, passBox, dateBox;
+    private TextView loginB;
     private Button registerB;
     private String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     private FirebaseAuth fAuth;
@@ -122,6 +127,7 @@ public class RegisterFragment extends Fragment {
         mailBox = view.findViewById(R.id.emailBox);
         passBox = view.findViewById(R.id.passBox);
         dateBox = view.findViewById(R.id.dateBox);
+        loginB = view.findViewById(R.id.loginText);
 
         genreArray = new String[11];
         genreArray[0] = getString(R.string.genreString);
@@ -385,6 +391,25 @@ public class RegisterFragment extends Fragment {
                 }
             }
         });
+
+        loginB.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        loginB.setTextColor(Color.BLACK);
+                        getParentFragmentManager().popBackStack();
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        loginB.setTextColor(Color.parseColor("#BF40BF"));
+                        break;
+                }
+                return false;
+            }
+        });
+
 
         return view;
     }

@@ -7,8 +7,9 @@
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_weight="0"
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="15dp"
@@ -16,14 +17,15 @@
         app:cardUseCompatPadding="true">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_margin="15dp"
+                android:layout_margin="20dp"
                 android:layout_weight="0"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -71,19 +73,19 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_margin="20dp"
                 android:layout_weight="0"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <Button
                     android:id="@+id/bChangeAvatar"
-                    android:layout_width="275dp"
+                    android:layout_width="200dp"
                     android:layout_height="50dp"
                     android:background="@drawable/border_bgless_button"
                     android:text="@string/bChangeAvatarText"
                     android:textColor="@drawable/color_text_button"
-                    android:textSize="18sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <Space
@@ -93,12 +95,12 @@
 
                 <Button
                     android:id="@+id/bChangeUsername"
-                    android:layout_width="275dp"
+                    android:layout_width="200dp"
                     android:layout_height="50dp"
                     android:background="@drawable/border_bgless_button"
                     android:text="@string/bChangeUserName"
                     android:textColor="@drawable/color_text_button"
-                    android:textSize="14sp"
+                    android:textSize="10sp"
                     android:textStyle="bold" />
 
                 <Space
@@ -108,12 +110,12 @@
 
                 <Button
                     android:id="@+id/bChangeFavGenre"
-                    android:layout_width="275dp"
+                    android:layout_width="200dp"
                     android:layout_height="50dp"
                     android:background="@drawable/border_bgless_button"
                     android:text="@string/bChangeFavGenre"
                     android:textColor="@drawable/color_text_button"
-                    android:textSize="16sp"
+                    android:textSize="11sp"
                     android:textStyle="bold" />
 
                 <Space
@@ -122,13 +124,13 @@
                     android:layout_weight="0" />
 
                 <Button
-                    android:id="@+id/bChangeFavGenre2"
+                    android:id="@+id/bLogOff"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@drawable/border_bgless_button"
                     android:text="@string/bDisconnect"
                     android:textColor="@drawable/color_text_button"
-                    android:textSize="18sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
 

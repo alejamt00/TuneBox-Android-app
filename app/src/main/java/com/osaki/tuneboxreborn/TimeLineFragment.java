@@ -125,7 +125,7 @@ public class TimeLineFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_time_line, container, false);
 
-
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         listaTunes = new ArrayList<TuneMsg>();
         ivAvatar = view.findViewById(R.id.ivAvatar);
         ivConf = view.findViewById(R.id.confButton);
@@ -228,12 +228,28 @@ public class TimeLineFragment extends Fragment {
 
                 View vAlert = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_layout_config, null);
                 builder.setView(vAlert);
-//                EditText editText = vAlert.findViewById(R.id.editTextTuneMsg);
-//                Button bAccept = vAlert.findViewById(R.id.bPublish);
-//                Button bCancel = vAlert.findViewById(R.id.bCancel);
-
-
+                Button bLogOff = vAlert.findViewById(R.id.bLogOff);
                 AlertDialog alert = builder.create();
+
+
+                bLogOff.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alert.dismiss();
+                        FirebaseAuth.getInstance().signOut();
+                        FragmentTransaction ft = getParentFragmentManager().beginTransaction()
+                                .setCustomAnimations(
+                                        R.anim.fade_in,
+                                        R.anim.fade_out,
+                                        R.anim.fade_in,
+                                        R.anim.fade_out
+                                );
+
+                        LoginFragment loginFragment = new LoginFragment();
+                        ft.replace(R.id.fragmentContainerView, loginFragment).commit();
+                    }
+                });
+
 
 
                 alert.show();
