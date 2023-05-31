@@ -8,7 +8,6 @@ El proyecto está basado en otro proyecto de la asignatura de Android de 2º de 
 - La aplicación usa Firebase como backend para almacenar los datos de los usuarios, las publicaciones y las canciones.
 - La aplicación permite crear y loguear usuarios con diferentes datos como avatar, nombre de usuario, nombre público, contraseña...
 - La aplicación permite enviar mensajes a una TL (Time Line) específica según el gusto musical del usuario, donde solo se ven mensajes de usuarios registrados con dicho género musical.
-- La aplicación permite agregar amigos para poder chatear por un chat integrado en la aplicación.
 
 ## Capturas de pantalla
 
