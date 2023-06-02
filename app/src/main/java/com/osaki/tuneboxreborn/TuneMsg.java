@@ -5,7 +5,6 @@ package com.osaki.tuneboxreborn;
  */
 public class TuneMsg {
 
-    private String id;
     private String authorId;
     private String publicName;
     private String userName;
@@ -17,7 +16,6 @@ public class TuneMsg {
     /**
      * Constructor parametrizado de la clase TuneMsg
      *
-     * @param id
      * @param authorId
      * @param publicName
      * @param userName
@@ -26,8 +24,7 @@ public class TuneMsg {
      * @param date
      * @param musicTL
      */
-    public TuneMsg(String id, String authorId, String publicName, String userName, String avatar, String msg, String date, String musicTL) {
-        this.id = id;
+    public TuneMsg(String authorId, String publicName, String userName, String avatar, String msg, String date, String musicTL) {
         this.authorId = authorId;
         this.publicName = publicName;
         this.userName = userName;
@@ -42,14 +39,6 @@ public class TuneMsg {
      * Métodos getter y setter de los datos del mensaje "tune"
      *
      */
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getMusicTL() {
         return musicTL;
     }
