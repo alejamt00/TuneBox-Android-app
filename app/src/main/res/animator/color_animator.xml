@@ -1,0 +1,15 @@
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <objectAnimator
+        android:propertyName="fillColor"
+        android:duration="1000"
+        android:valueFrom="#FFbf407f"
+        android:valueTo="#40bf80"
+        android:valueType="colorType" />
+    <objectAnimator
+        android:propertyName="fillColor"
+        android:startOffset="1000"
+        android:duration="1000"
+        android:valueFrom="#40bf80"
+        android:valueTo="#FFbf407f"
+        android:valueType="colorType" />
+</set>

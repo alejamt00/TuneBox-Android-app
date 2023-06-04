@@ -2,10 +2,16 @@ package com.osaki.tuneboxreborn;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -64,7 +71,7 @@ public class RegisterFragment extends Fragment {
 
     private String[] genreArray;
     private Spinner genreSpinner;
-    private ImageView avatarButton;
+    private ImageView avatarButton, ivLogoLoading;
     private CustomSpinnerAdapter genreSpinnerAdapter;
     private EditText nameBox, userBox, mailBox, passBox, dateBox;
     private TextView loginB;
@@ -115,12 +122,14 @@ public class RegisterFragment extends Fragment {
                 && !nameBox.getText().toString().trim().equals("") && !passBox.getText().toString().trim().equals(""));
     }
 
-    private void initData(View view) {
+    private void initData(View view, LayoutInflater inflater) {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         minEdad = false;
         avatarSelectad = false;
 
+        View loadingView = inflater.inflate(R.layout.dialog_progress, null);
+        ivLogoLoading = loadingView.findViewById(R.id.logoIcono);
         avatarButton = view.findViewById(R.id.ivAvatar);
         nameBox = view.findViewById(R.id.nameBox);
         userBox = view.findViewById(R.id.userBox);
@@ -188,6 +197,39 @@ public class RegisterFragment extends Fragment {
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 
+    public void startAnimation(View loadingView, LayoutInflater inflater){
+        Drawable dLoading = getContext().getDrawable(R.drawable.logo_animado);
+        ImageView ivLogoLoading = loadingView.findViewById(R.id.logoIcono);
+        ivLogoLoading.setImageDrawable(dLoading);
+
+        if (dLoading instanceof Animatable) {
+            final Animatable animatable = (Animatable) dLoading;
+            animatable.start();
+        }
+    }
+
+    private void startAnimationColor(View loadingView) {
+        ImageView ivLogoLoading = loadingView.findViewById(R.id.logoIcono);
+        Drawable drawableLogo = ivLogoLoading.getDrawable();
+
+        // Comprueba si el Drawable es una instancia de AnimatedVectorDrawable
+        if (drawableLogo instanceof AnimatedVectorDrawable) {
+            AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) drawableLogo;
+
+            // Crea una copia modificable del Drawable
+            AnimatedVectorDrawable mutableDrawable = (AnimatedVectorDrawable) animatedVectorDrawable.mutate();
+
+            // Crea un ObjectAnimator para animar el cambio de color
+            ObjectAnimator objectAnimator = ObjectAnimator.ofArgb(mutableDrawable, "tint", Color.parseColor("#FFbf407f"), Color.parseColor("#40bf80"));
+            objectAnimator.setDuration(1000);
+            objectAnimator.setRepeatCount(1);
+            objectAnimator.setRepeatMode(ValueAnimator.REVERSE);
+
+            // Inicia la animación
+            objectAnimator.start();
+        }
+
+    }
 
     private void PerformAuth(LayoutInflater inflater) {
         String email = mailBox.getText().toString();
@@ -203,12 +245,18 @@ public class RegisterFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.passLengthError), Toast.LENGTH_SHORT).show();
         } else {
             Query query = fStore.collection("users").whereEqualTo("user", userName);
+
             // Infla el layout
             View loadingView = inflater.inflate(R.layout.dialog_progress, null);
 
             // Agrega la vista a la vista raíz de la actividad
             ViewGroup rootView = getActivity().findViewById(android.R.id.content);
+
+            startAnimation(loadingView,inflater);
+
             rootView.addView(loadingView);
+
+
             Log.d("RegisterDeb", "Buscando usuarios con userName: " + userName);
             query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -243,7 +291,7 @@ public class RegisterFragment extends Fragment {
                                             FirebaseStorage fStorage = FirebaseStorage.getInstance();
 
                                             // Crear una referencia al archivo de imagen en el almacenamiento
-                                            StorageReference avatarRef = fStorage.getReference().child("avatars/" + userID + ".jpg");
+                                            StorageReference avatarRef = fStorage.getReference().child("avatars/" + userID);
 
                                             // Subir el archivo de imagen
                                             if(avatarSelectad){
@@ -258,15 +306,16 @@ public class RegisterFragment extends Fragment {
                                                                 // Guardar la URL de descarga en el documento del usuario
                                                                 documentReference.update("avatarUrl", uri.toString());
                                                                 Fade fade = new Fade();
-                                                                TransitionManager.beginDelayedTransition(rootView,fade);
-                                                                rootView.removeView(loadingView);
+                                                                TransitionManager.beginDelayedTransition(rootView,new Fade());
+                                                                startAnimationColor(loadingView);
                                                                 Toast.makeText(getContext(), getString(R.string.registerSuccess), Toast.LENGTH_SHORT).show();
                                                                 Handler handler = new Handler();
                                                                 handler.postDelayed(new Runnable() {
                                                                     public void run() {
+                                                                        rootView.removeView(loadingView);
                                                                         getParentFragmentManager().popBackStackImmediate();
                                                                     }
-                                                                }, 500);
+                                                                }, 1000);
                                                             }
                                                         });
                                                     }
@@ -275,14 +324,15 @@ public class RegisterFragment extends Fragment {
                                                 documentReference.update("avatarUrl", "https://firebasestorage.googleapis.com/v0/b/tunebox-reborn.appspot.com/o/defaultAvatar.png?alt=media&token=151ff5f8-d1fa-4f2a-be0a-353dcca8f6c3");
                                                 Fade fade = new Fade();
                                                 TransitionManager.beginDelayedTransition(rootView,fade);
-                                                rootView.removeView(loadingView);
+                                                startAnimationColor(loadingView);
                                                 Toast.makeText(getContext(), getString(R.string.registerSuccess), Toast.LENGTH_SHORT).show();
                                                 Handler handler = new Handler();
                                                 handler.postDelayed(new Runnable() {
                                                     public void run() {
+                                                        rootView.removeView(loadingView);
                                                         getParentFragmentManager().popBackStackImmediate();
                                                     }
-                                                }, 500);
+                                                }, 1000);
 
                                             }
 
@@ -346,7 +396,7 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_register, container, false);
-        initData(view);
+        initData(view,inflater);
 
         dateBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -378,10 +428,19 @@ public class RegisterFragment extends Fragment {
             }
         });
 
-
-        registerB.setOnClickListener(new View.OnClickListener() {
+        registerB.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onTouch(View view, MotionEvent event) {
+                switch(event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        registerB.setTextColor(Color.WHITE);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        registerB.setTextColor(Color.parseColor("#FFbf407f"));
+                        break;
+                }
+
                 if(dataFilled()){
                     PerformAuth(inflater);
                 } else {
@@ -389,6 +448,8 @@ public class RegisterFragment extends Fragment {
                     toast.setMargin(50, 50);
                     toast.show();
                 }
+
+                return false;
             }
         });
 
@@ -403,7 +464,7 @@ public class RegisterFragment extends Fragment {
                         break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
-                        loginB.setTextColor(Color.parseColor("#BF40BF"));
+                        loginB.setTextColor(Color.parseColor("#FFbf407f"));
                         break;
                 }
                 return false;

@@ -1,14 +1,21 @@
 package com.osaki.tuneboxreborn;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.transition.Fade;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +24,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +45,7 @@ public class LoginFragment extends Fragment {
     private TextView regText;
     private FirebaseFirestore ff;
     private FirebaseAuth fAuth;
+    private Drawable dLoading;
 
 
     /**
@@ -75,7 +84,51 @@ public class LoginFragment extends Fragment {
         return (!usernameET.getText().toString().equals("")&&!passET.getText().toString().equals(""));
     }
 
-    public void login(String correo, String pass){
+    public void startAnimation(View loadingView){
+
+        dLoading = getContext().getDrawable(R.drawable.logo_animado);
+        ImageView ivLogoLoading = loadingView.findViewById(R.id.logoIcono);
+        ivLogoLoading.setImageDrawable(dLoading);
+
+        if (dLoading instanceof Animatable) {
+            final Animatable animatable = (Animatable) dLoading;
+            animatable.start();
+        }
+    }
+
+    private void startAnimationColor(View loadingView) {
+        ImageView ivLogoLoading = loadingView.findViewById(R.id.logoIcono);
+        Drawable drawableLogo = ivLogoLoading.getDrawable();
+
+        // Comprueba si el Drawable es una instancia de AnimatedVectorDrawable
+        if (drawableLogo instanceof AnimatedVectorDrawable) {
+            AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) drawableLogo;
+
+            // Crea una copia modificable del Drawable
+            AnimatedVectorDrawable mutableDrawable = (AnimatedVectorDrawable) animatedVectorDrawable.mutate();
+
+            // Crea un ObjectAnimator para animar el cambio de color
+            ObjectAnimator objectAnimator = ObjectAnimator.ofArgb(mutableDrawable, "tint", Color.parseColor("#FFbf407f"), Color.parseColor("#40bf80"));
+            objectAnimator.setDuration(1000);
+            objectAnimator.setRepeatCount(1);
+            objectAnimator.setRepeatMode(ValueAnimator.REVERSE);
+
+            // Inicia la animación
+            objectAnimator.start();
+        }
+
+    }
+
+
+    public void login(String correo, String pass, LayoutInflater inflater){
+
+        View loadingView = inflater.inflate(R.layout.dialog_progress, null);
+
+        startAnimation(loadingView);
+        // Agrega la vista de loading a la vista raíz de la actividad
+        ViewGroup rootView = getActivity().findViewById(android.R.id.content);
+        rootView.addView(loadingView);
+
         fAuth.signInWithEmailAndPassword(correo,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -100,9 +153,13 @@ public class LoginFragment extends Fragment {
                     toast.setMargin(50, 50);
                     toast.show();
                 }
+                startAnimationColor(loadingView);
+                TransitionManager.beginDelayedTransition(rootView,new Fade());
+                rootView.removeView(loadingView);
             }
         });
     }
+
 
     /**
      * Método llamado cuando se crea la vista del fragmento.
@@ -152,7 +209,7 @@ public class LoginFragment extends Fragment {
                             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(usernameET.getWindowToken(), 0);
                             imm.hideSoftInputFromWindow(passET.getWindowToken(), 0);
-                            login(usernameET.getText().toString(),passET.getText().toString());
+                            login(usernameET.getText().toString(),passET.getText().toString(),inflater);
                         } else {
                             Toast toast = Toast.makeText(getContext(), getString(R.string.fillBothFields), Toast.LENGTH_SHORT);
                             toast.setMargin(50, 50);
@@ -161,7 +218,7 @@ public class LoginFragment extends Fragment {
                         break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
-                        loginButton.setTextColor(Color.parseColor("#BF40BF"));
+                        loginButton.setTextColor(Color.parseColor("#FFbf407f"));
                         break;
                 }
                 return false;

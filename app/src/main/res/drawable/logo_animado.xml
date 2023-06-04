@@ -1,0 +1,27 @@
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/logo">
+    <target
+        android:name="bar1"
+        android:animation="@animator/bar_down_animation" />
+    <target
+        android:name="bar2"
+        android:animation="@animator/bar_down_animation2" />
+    <target
+        android:name="bar3"
+        android:animation="@animator/bar_down_animation3" />
+    <target
+        android:name="bar4"
+        android:animation="@animator/bar_down_animation4" />
+    <target
+        android:name="bar5"
+        android:animation="@animator/bar_down_animation5" />
+    <target
+        android:name="bar6"
+        android:animation="@animator/bar_down_animation6" />
+    <target
+        android:name="bar7"
+        android:animation="@animator/bar_down_animation7" />
+    <target
+        android:name="bar8"
+        android:animation="@animator/bar_down_animation8" />
+</animated-vector>

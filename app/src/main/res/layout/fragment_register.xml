@@ -78,7 +78,7 @@
                     android:gravity="center|start"
                     android:hint="@string/pName"
                     android:inputType="text"
-                    android:maxLength="16"
+                    android:maxLength="23"
                     android:minHeight="48dp"
                     android:paddingStart="10dp"
                     android:textColor="@color/main_purple_variant_bright"
@@ -100,7 +100,7 @@
                     android:gravity="center|start"
                     android:hint="@string/user"
                     android:inputType="text"
-                    android:maxLength="12"
+                    android:maxLength="20"
                     android:minHeight="48dp"
                     android:paddingStart="10dp"
                     android:textColor="@color/main_purple_variant_bright"
@@ -186,8 +186,7 @@
                     android:minHeight="48dp"
                     android:overlapAnchor="false"
                     android:popupBackground="@drawable/spinner_item_bg"
-                    android:textColor="@color/main_purple_variant_bright"
-                    android:textColorHint="#88BF40BF" />
+                    android:textColor="@color/main_purple_variant_bright" />
 
 
             </LinearLayout>
@@ -207,8 +206,8 @@
                     android:fontFamily="sans-serif"
                     android:text="@string/registrar"
                     android:textAlignment="center"
-                    android:textColor="@color/main_purple_variant_bright"
-                    android:textSize="18sp"
+                    android:textColor="#FFbf407f"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <Space

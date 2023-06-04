@@ -7,6 +7,6 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#1d1d1b</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="main_purple">#BF40BF</color>
-    <color name="main_purple_variant_bright">#bf407f</color>
+    <color name="main_purple">#FFbf407f</color>
+    <color name="main_purple_variant_bright">#FFbf407f</color>
 </resources>

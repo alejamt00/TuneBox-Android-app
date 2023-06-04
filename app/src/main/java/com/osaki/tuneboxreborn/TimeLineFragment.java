@@ -1,7 +1,12 @@
 package com.osaki.tuneboxreborn;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.AlertDialog;
-import android.content.ContentValues;
+import android.graphics.Color;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.transition.Fade;
 import android.transition.TransitionManager;
 import android.util.Log;
@@ -19,7 +25,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -50,7 +55,7 @@ import java.util.Map;
  */
 public class TimeLineFragment extends Fragment {
 
-    private ImageView ivAvatar, ivConf;
+    private ImageView ivAvatar, ivConf, ivLogo;
     private FloatingActionButton fabMsg;
     private String tune;
     private ArrayList<TuneMsg> listaTunes;
@@ -59,6 +64,7 @@ public class TimeLineFragment extends Fragment {
     private User user;
     private View loadingView;
     private ViewGroup rootView;
+    private Boolean blockUpdate;
 
 
     /**
@@ -101,7 +107,8 @@ public class TimeLineFragment extends Fragment {
      * Carga los mensajes de la línea de tiempo.
      */
     public void loadTunes(){
-
+        startMoveAnimation();
+        recyclerTunes.stopScroll();
         listaTunes.clear();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -127,7 +134,26 @@ public class TimeLineFragment extends Fragment {
                                 listaTunes.add(msg);
 
                             }
-                            recyclerAdapter.notifyDataSetChanged();
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            recyclerAdapter.notifyDataSetChanged();
+                                            Handler handler = new Handler();
+                                            handler.postDelayed(new Runnable() {
+                                                public void run() {
+                                                    startColorAnimation();
+                                                }
+                                            }, 500);
+
+                                        }
+                                    }, 500);
+                                }
+                            });
+                            recyclerTunes.smoothScrollToPosition(0);
 
 
                         } else {
@@ -145,7 +171,7 @@ public class TimeLineFragment extends Fragment {
      */
     public void uploadTune(TuneMsg t){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+        startMoveAnimation();
         Map<String, Object> tune = new HashMap<>();
         tune.put("authorId", t.getAuthorId());
         tune.put("publicName", t.getPublicName());
@@ -174,6 +200,39 @@ public class TimeLineFragment extends Fragment {
 
     }
 
+    public void startMoveAnimation(){
+        Drawable drawable = getContext().getDrawable(R.drawable.logo_animado);
+        ivLogo.setImageDrawable(drawable);
+
+        if (drawable instanceof Animatable) {
+            final Animatable animatable = (Animatable) drawable;
+            animatable.start();
+        }
+    }
+
+    public void startColorAnimation(){
+        // Obtiene el Drawable de la vista
+        Drawable drawableLogo = ivLogo.getDrawable();
+
+        // Comprueba si el Drawable es una instancia de AnimatedVectorDrawable
+        if (drawableLogo instanceof AnimatedVectorDrawable) {
+            AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) drawableLogo;
+
+            // Crea una copia modificable del Drawable
+            AnimatedVectorDrawable mutableDrawable = (AnimatedVectorDrawable) animatedVectorDrawable.mutate();
+
+            // Crea un ObjectAnimator para animar el cambio de color
+            ObjectAnimator objectAnimator = ObjectAnimator.ofArgb(mutableDrawable, "tint", Color.parseColor("#FFbf407f"), Color.parseColor("#40bf80"));
+            objectAnimator.setDuration(1000);
+            objectAnimator.setRepeatCount(1);
+            objectAnimator.setRepeatMode(ValueAnimator.REVERSE);
+
+            // Inicia la animación
+            objectAnimator.start();
+        }
+
+    }
+
     /**
      *
      * Método llamado en la cración de la vista, encargado de inicializar todos los elementos y su
@@ -196,12 +255,26 @@ public class TimeLineFragment extends Fragment {
         listaTunes = new ArrayList<>();
 
         ivAvatar = view.findViewById(R.id.ivAvatar);
+        ivLogo = view.findViewById(R.id.ivLogo);
         ivConf = view.findViewById(R.id.confButton);
         fabMsg = view.findViewById(R.id.addTuneMsg);
+
         tune = "";
 
         // Infla el layout
         loadingView = inflater.inflate(R.layout.dialog_progress, null);
+
+        Drawable dLoading = getContext().getDrawable(R.drawable.logo_animado);
+        ImageView ivLogoLoading = loadingView.findViewById(R.id.logoIcono);
+        ivLogoLoading.setImageDrawable(dLoading);
+
+        if (dLoading instanceof Animatable) {
+            final Animatable animatable = (Animatable) dLoading;
+            animatable.start();
+        }
+
+
+        startMoveAnimation();
 
         // Agrega la vista de loading a la vista raíz de la actividad
         rootView = getActivity().findViewById(android.R.id.content);
@@ -215,10 +288,29 @@ public class TimeLineFragment extends Fragment {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 user = documentSnapshot.toObject(User.class);
                 loadTunes();
+                // Obtiene el Drawable de la vista
+                Drawable drawableLogo = ivLogoLoading.getDrawable();
+
+                // Comprueba si el Drawable es una instancia de AnimatedVectorDrawable
+                if (drawableLogo instanceof AnimatedVectorDrawable) {
+                    AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) drawableLogo;
+
+                    // Crea una copia modificable del Drawable
+                    AnimatedVectorDrawable mutableDrawable = (AnimatedVectorDrawable) animatedVectorDrawable.mutate();
+
+                    // Crea un ObjectAnimator para animar el cambio de color
+                    ObjectAnimator objectAnimator = ObjectAnimator.ofArgb(mutableDrawable, "tint", Color.parseColor("#FFbf407f"), Color.parseColor("#40bf80"));
+                    objectAnimator.setDuration(1000);
+                    objectAnimator.setRepeatCount(1);
+                    objectAnimator.setRepeatMode(ValueAnimator.REVERSE);
+
+                    // Inicia la animación
+                    objectAnimator.start();
+                }
+
                 //Carga desde la url de firabase en formato String el avatar correcto
                 Glide.with(getContext()).load(user.getAvatarUrl()).into(ivAvatar);
-                Fade fade = new Fade();
-                TransitionManager.beginDelayedTransition(rootView,fade);
+                TransitionManager.beginDelayedTransition(rootView,new Fade());
                 rootView.removeView(loadingView);
             }
         });
@@ -335,6 +427,14 @@ public class TimeLineFragment extends Fragment {
                 ft.replace(R.id.fragmentContainerView, profileFragment).commit();
 
 
+            }
+        });
+
+// Agrega un OnClickListener a tu vista para iniciar la animación al hacer clic
+        ivLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadTunes();
             }
         });
 

@@ -29,6 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
+                android:gravity="center|start"
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
@@ -52,48 +53,49 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_weight="0"
+                            android:contentDescription="@string/avatar_del_usuario"
                             android:rotation="0"
                             android:rotationY="0"
                             android:scaleType="centerCrop"
                             app:srcCompat="@drawable/ic_launcher_background"
-                            tools:ignore="ImageContrastCheck"
-                            android:contentDescription="@string/avatar_del_usuario" />
+                            tools:ignore="ImageContrastCheck" />
 
                     </androidx.cardview.widget.CardView>
 
                 </androidx.cardview.widget.CardView>
 
                 <Space
-                    android:layout_width="15dp"
+                    android:layout_width="10dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0" />
 
-                <TextView
-                    android:id="@+id/publicNameTV"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:text="PlaceHolderName"
-                    android:textColor="@color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
+                    android:orientation="vertical">
 
-                <Space
-                    android:layout_width="5dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0" />
+                    <TextView
+                        android:id="@+id/publicNameTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:text="PlaceHolderName"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText" />
 
-                <TextView
-                    android:id="@+id/userName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:text="placeHolderUser"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="15sp"
-                    android:textStyle="italic"
-                    tools:ignore="HardcodedText" />
+                    <TextView
+                        android:id="@+id/userName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:text="placeHolderUser"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="15sp"
+                        android:textStyle="italic"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -120,6 +122,10 @@
                         android:textColor="@color/black"
                         android:textSize="15sp"
                         tools:ignore="HardcodedText" />
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp" />
 
                     <TextView
                         android:id="@+id/date"

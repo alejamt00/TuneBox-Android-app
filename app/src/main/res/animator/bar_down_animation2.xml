@@ -1,0 +1,8 @@
+<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:propertyName="translateY"
+    android:startOffset="100"
+    android:duration="500"
+    android:valueFrom="2"
+    android:valueTo="-2"
+    android:repeatCount="infinite"
+    android:repeatMode="reverse" />

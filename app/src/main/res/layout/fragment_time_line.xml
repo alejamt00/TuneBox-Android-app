@@ -28,7 +28,7 @@
                 android:layout_weight="0"
                 android:background="#FFFFFF"
                 app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="30dp"
+                app:cardCornerRadius="20dp"
                 app:cardElevation="10dp">
 
                 <LinearLayout
@@ -79,7 +79,7 @@
                         android:clickable="true"
                         android:contentDescription="@string/icono_de_la_app"
                         android:focusable="true"
-                        android:src="@drawable/logo" />
+                        android:src="@drawable/logo_animado" />
 
                     <Space
                         android:layout_width="wrap_content"
@@ -112,7 +112,7 @@
                 android:layout_weight="0"
                 android:background="#FFFFFF"
                 app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="30dp"
+                app:cardCornerRadius="15dp"
                 app:cardElevation="5dp">
 
                 <androidx.recyclerview.widget.RecyclerView
