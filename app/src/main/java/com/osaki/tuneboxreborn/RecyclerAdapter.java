@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -32,7 +39,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private LayoutInflater lInflater;
     private FragmentTransaction ft;
     private Context c;
-    private String userID;
 
 
     /**
@@ -41,14 +47,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
      * @param listaTunes La lista de Tunes a mostrar.
      * @param context El contexto de la aplicación.
      * @param ft La transacción de fragmento para cambiar de fragmento.
-     * @param userID El ID del usuario logueado.
      */
-    public RecyclerAdapter(ArrayList<TuneMsg> listaTunes, Context context, FragmentTransaction ft, String userID){
+    public RecyclerAdapter(ArrayList<TuneMsg> listaTunes, Context context, FragmentTransaction ft){
         this.lInflater = LayoutInflater.from(context);
         this.c = context;
         this.listaTunes = listaTunes;
         this.ft = ft;
-        this.userID = userID;
     }
 
     /**
@@ -79,7 +83,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(listaTunes.get(position).getAuthorId().equals(userID)){
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                if(listaTunes.get(position).getAuthorId().equals(currentUser.getUid())){
                     AlertDialog.Builder builder = new AlertDialog.Builder(c, R.style.MyAlertDialogStyle);
 
                     View vAlert = LayoutInflater.from(c).inflate(R.layout.alert_dialog_delete_layout, null);
@@ -92,17 +97,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     bAccept.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-//                            String[] selectionArgs = {listaTunes.get(position).getId()};
-//                            String selection = EstructuraBDTunes.COLUMN_ID + " LIKE ?";
-//                            int deletedRows = dbHelper.getWritableDatabase().delete(
-//                                    EstructuraBDTunes.TABLE_TUNES, selection, selectionArgs
-//                            );
-//
-//                            if(deletedRows!=0){
-//                                listaTunes.remove(position);
-//                            }
-//                            notifyDataSetChanged();
-
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            DocumentReference docRef = db.collection("tunes").document(listaTunes.get(position).getTuneId());
+                            docRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    listaTunes.remove(position);
+                                    notifyDataSetChanged();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Ocurrió un error al intentar eliminar el documento
+                                }
+                            });
                             alert.dismiss();
                         }
                     });
@@ -115,6 +123,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                     });
 
                     alert.show();
+
+                } else {
+
+                    ProfileFragment profileFragment = new ProfileFragment();
+                    Bundle args = new Bundle();
+                    args.putString("uuid", listaTunes.get(position).getAuthorId());
+                    profileFragment.setArguments(args);
+
+                    ft.replace(R.id.fragmentContainerView, profileFragment).commit();
 
                 }
             }

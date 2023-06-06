@@ -25,6 +25,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -123,6 +125,7 @@ public class TimeLineFragment extends Fragment {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("DEBUGMSG", document.getId() + " => " + document.getData());
                                 TuneMsg msg = new TuneMsg(
+                                        document.getId(),
                                         document.getString("authorId"),
                                         document.getString("publicName"),
                                         document.getString("userName"),
@@ -328,7 +331,7 @@ public class TimeLineFragment extends Fragment {
                 );
         ;
 
-        recyclerAdapter = new RecyclerAdapter(listaTunes,getContext(), ft, uFire.getUid());
+        recyclerAdapter = new RecyclerAdapter(listaTunes,getContext(), ft);
         recyclerTunes.setAdapter(recyclerAdapter);
 
 
@@ -355,7 +358,7 @@ public class TimeLineFragment extends Fragment {
 
                         if(!tune.trim().equals("")){
                             String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-                            TuneMsg t = new TuneMsg(uFire.getUid(),user.getpName(), user.getUser(), user.getAvatarUrl(), tune, date, user.getGenre());
+                            TuneMsg t = new TuneMsg("tuneId", uFire.getUid(),user.getpName(), user.getUser(), user.getAvatarUrl(), tune, date, user.getGenre());
                             uploadTune(t);
                             alert.dismiss();
                         }
@@ -381,8 +384,79 @@ public class TimeLineFragment extends Fragment {
                 View vAlert = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_layout_config, null);
                 builder.setView(vAlert);
                 Button bLogOff = vAlert.findViewById(R.id.bLogOff);
+                Button bChangeFavGenre = vAlert.findViewById(R.id.bChangeFavGenre);
                 AlertDialog alert = builder.create();
 
+
+                bChangeFavGenre.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alert.dismiss();
+
+                        AlertDialog.Builder bGenre = new AlertDialog.Builder(getContext(), R.style.MyAlertDialogStyle);
+
+                        View vAlertGenre = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_layout_fav_genre, null);
+                        bGenre.setView(vAlertGenre);
+
+                        AlertDialog alertGenre = bGenre.create();
+                        CustomSpinnerAdapter genreSpinnerAdapter;
+                        Spinner genreSpinner = vAlertGenre.findViewById(R.id.spinnerGenre);
+                        String[] genreArray = new String[11];
+                        genreArray[0] = getString(R.string.genreString);
+                        genreArray[1] = getString(R.string.bsString);
+                        genreArray[2] = getString(R.string.rockString);
+                        genreArray[3] = getString(R.string.indieString);
+                        genreArray[4] = getString(R.string.metalString);
+                        genreArray[5] = getString(R.string.popString);
+                        genreArray[6] = getString(R.string.reggaetonString);
+                        genreArray[7] = getString(R.string.classicalString);
+                        genreArray[8] = getString(R.string.technoString);
+                        genreArray[9] = getString(R.string.hiphopString);
+                        genreArray[10] = getString(R.string.flamencoString);
+                        genreSpinnerAdapter = new CustomSpinnerAdapter(view.getContext(), R.layout.spinner_item_layout, genreArray, 0);
+                        genreSpinner.setAdapter(genreSpinnerAdapter);
+
+                        Button bCancel = vAlertGenre.findViewById(R.id.bCancelar);
+                        Button bAccept = vAlertGenre.findViewById(R.id.bAceptar);
+
+                        bCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                alertGenre.dismiss();
+                            }
+                        });
+
+                        bAccept.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                DocumentReference docRef = db.collection("users").document(uFire.getUid());
+                                docRef.update("genre", genreSpinner.getSelectedItem().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getContext(), "Género musical cambiado correctamente!", Toast.LENGTH_SHORT).show();
+                                        user.setGenre(genreSpinner.getSelectedItem().toString());
+                                        loadTunes();
+                                        alertGenre.dismiss();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getContext(), "Error al cambiar de género musical favorito!", Toast.LENGTH_SHORT).show();
+                                        alertGenre.dismiss();
+                                    }
+                                });
+
+                            }
+                        });
+
+
+
+                        alertGenre.show();
+
+
+                    }
+                });
 
                 bLogOff.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -425,8 +499,6 @@ public class TimeLineFragment extends Fragment {
 
 
                 ft.replace(R.id.fragmentContainerView, profileFragment).commit();
-
-
             }
         });
 

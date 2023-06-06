@@ -89,7 +89,7 @@ public class ProfileFragment extends Fragment {
                         TextView userName = view.findViewById(R.id.userNameTV);
                         TextView favGenre = view.findViewById(R.id.favGenre);
                         pName.setText(userPf.getpName());
-                        userName.setText(userPf.getUser());
+                        userName.setText("@"+userPf.getUser());
                         favGenre.setText(userPf.getGenre());
 
 
@@ -108,7 +108,7 @@ public class ProfileFragment extends Fragment {
 
 
 
-                        recyclerAdapter = new RecyclerAdapter(listaTunesPf,getContext(), ft,userId);
+                        recyclerAdapter = new RecyclerAdapter(listaTunesPf,getContext(), ft);
                         recyclerTunes.setAdapter(recyclerAdapter);
 
                         loadTunes();
@@ -144,6 +144,7 @@ public class ProfileFragment extends Fragment {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d("DEBUGMSG", document.getId() + " => " + document.getData());
                                 TuneMsg msg = new TuneMsg(
+                                        document.getId(),
                                         document.getString("authorId"),
                                         document.getString("publicName"),
                                         document.getString("userName"),

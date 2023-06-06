@@ -244,7 +244,6 @@ public class RegisterFragment extends Fragment {
         } else if (passBox.getText().toString().trim().length() < 6) {
             Toast.makeText(getContext(), getString(R.string.passLengthError), Toast.LENGTH_SHORT).show();
         } else {
-            Query query = fStore.collection("users").whereEqualTo("user", userName);
 
             // Infla el layout
             View loadingView = inflater.inflate(R.layout.dialog_progress, null);
@@ -256,7 +255,7 @@ public class RegisterFragment extends Fragment {
 
             rootView.addView(loadingView);
 
-
+            Query query = fStore.collection("users").whereEqualTo("user", userName);
             Log.d("RegisterDeb", "Buscando usuarios con userName: " + userName);
             query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -440,7 +439,13 @@ public class RegisterFragment extends Fragment {
                         registerB.setTextColor(Color.parseColor("#FFbf407f"));
                         break;
                 }
+                return false;
+            }
+        });
 
+        registerB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 if(dataFilled()){
                     PerformAuth(inflater);
                 } else {
@@ -448,8 +453,6 @@ public class RegisterFragment extends Fragment {
                     toast.setMargin(50, 50);
                     toast.show();
                 }
-
-                return false;
             }
         });
 
