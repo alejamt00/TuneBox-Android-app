@@ -15,8 +15,10 @@
     <string name="signGoogle">¡Inicia sesión con Google!</string>
     <string name="buttonBackSpeakableText">Botón para ir hacia el anterior fragmento</string>
     <string name="quieres_borrar_este_tune">¿Quieres borrar este tune?</string>
+    <string name="quieres_borrar_este_user">¿Quieres borrar tu usuario?</string>
     <string name="cancelar">Cancelar</string>
     <string name="aceptar">Aceptar</string>
+    <string name="confirm">Confirmar</string>
     <string name="avatar_del_usuario">Avatar del usuario</string>
     <string name="stay_tuned">Stay tuned!</string>
     <string name="publicar">Publicar</string>
@@ -43,7 +45,7 @@
     <string name="registerSuccess">¡Usuario registrado con éxito!</string>
     <string name="existError">¡Ese usuario ya existe!</string>
     <string name="avatarError">¡Avatar no seleccionado!</string>
-    <string name="errorFieldsNotFilled">Falta rellenar algún campo...</string>
+    <string name="errorFieldsNotFilled">Falta rellenar algún campo... Recuerda que el usuario tampoco puede contener espacios</string>
     <string name="googleButtonSText">Botón para iniciar sesión con Google</string>
     <string name="passLengthError">La contraseña debe tener una longitud 6 o superior.</string>
     <string name="existUser">Ese nombre de usuario ya existe...</string>
@@ -51,7 +53,9 @@
     <string name="existEmailError">Ya existe una cuenta con este correo electrónico...</string>
     <string name="errorCreate">Ocurrió un error al crear la cuenta...</string>
     <string name="bChangeAvatarText">Cambiar avatar</string>
-    <string name="bChangeUserName">Cambiar nombre de usuario</string>
+    <string name="bChangePublicName">Cambiar nombre público</string>
     <string name="bChangeFavGenre">Cambiar gusto musical</string>
+    <string name="bChangePass">Cambiar contraseña</string>
     <string name="bDisconnect">Cerrar sesión</string>
+    <string name="bDelete">Borrar cuenta</string>
 </resources>

@@ -1,15 +1,24 @@
 package com.osaki.tuneboxreborn;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,18 +33,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -43,6 +64,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,7 +90,10 @@ public class TimeLineFragment extends Fragment {
     private User user;
     private View loadingView;
     private ViewGroup rootView;
-    private Boolean blockUpdate;
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+    private Uri avatarUri;
+    private boolean avatarSelected;
+    private ImageView ivAvatarMod;
 
 
     /**
@@ -254,6 +281,21 @@ public class TimeLineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null && result.getData().getData() != null) {
+                    // Obtener la URI de la imagen seleccionada
+                    avatarUri = result.getData().getData();
+                    ivAvatarMod.setImageURI(avatarUri);
+                    avatarSelected = true;
+                }
+            }
+        });
+
+
+
         View view = inflater.inflate(R.layout.fragment_time_line, container, false);
         listaTunes = new ArrayList<>();
 
@@ -290,6 +332,13 @@ public class TimeLineFragment extends Fragment {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 user = documentSnapshot.toObject(User.class);
+
+                Glide.with(getContext())
+                        .load(user.getAvatarUrl())
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(ivAvatar);
+
                 loadTunes();
                 // Obtiene el Drawable de la vista
                 Drawable drawableLogo = ivLogoLoading.getDrawable();
@@ -310,11 +359,9 @@ public class TimeLineFragment extends Fragment {
                     // Inicia la animación
                     objectAnimator.start();
                 }
-
-                //Carga desde la url de firabase en formato String el avatar correcto
-                Glide.with(getContext()).load(user.getAvatarUrl()).into(ivAvatar);
                 TransitionManager.beginDelayedTransition(rootView,new Fade());
                 rootView.removeView(loadingView);
+
             }
         });
 
@@ -384,9 +431,274 @@ public class TimeLineFragment extends Fragment {
                 View vAlert = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_layout_config, null);
                 builder.setView(vAlert);
                 Button bLogOff = vAlert.findViewById(R.id.bLogOff);
+                Button bDeleteUser = vAlert.findViewById(R.id.bDeleteUser);
                 Button bChangeFavGenre = vAlert.findViewById(R.id.bChangeFavGenre);
+                Button bChangePname = vAlert.findViewById(R.id.bChangeName);
+                Button bChangeAvatar = vAlert.findViewById(R.id.bChangeAvatar);
                 AlertDialog alert = builder.create();
 
+                bChangeAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alert.dismiss();
+
+                        avatarSelected = false;
+
+                        AlertDialog.Builder bChangeAv = new AlertDialog.Builder(getContext(), R.style.MyAlertDialogStyle);
+                        View vAlertChangeAv = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_change_avatar_layout, null);
+                        bChangeAv.setView(vAlertChangeAv);
+                        AlertDialog alertChangeAv = bChangeAv.create();
+                        alertChangeAv.show();
+                        Button confirmAvatar = vAlertChangeAv.findViewById(R.id.bConfirmar);
+                        ivAvatarMod = vAlertChangeAv.findViewById(R.id.ivAvatar);
+
+                        ivAvatarMod.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent();
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                pickImageLauncher.launch(Intent.createChooser(intent, "Select Picture"));
+
+                            }
+                        });
+
+                        confirmAvatar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if(avatarSelected){
+                                    alertChangeAv.dismiss();
+
+                                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                                    StorageReference storageRef = storage.getReference();
+                                    StorageReference oldAvatarRef = storageRef.child("avatars/" + uFire.getUid());
+                                    oldAvatarRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            // El archivo se eliminó correctamente
+                                            // Subir el nuevo avatar
+                                            StorageReference newAvatarRef = storageRef.child("avatars/" + uFire.getUid());
+                                            UploadTask uploadTask = newAvatarRef.putFile(avatarUri);
+                                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                    // La imagen se subió correctamente
+                                                    // Obtener la URL de descarga de la imagen
+                                                    newAvatarRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                        @Override
+                                                        public void onSuccess(Uri uri) {
+                                                            String downloadUrl = uri.toString();
+                                                            // Actualizar el valor del campo "avatar" en el documento del usuario
+                                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                                            DocumentReference docRef = db.collection("users").document(uFire.getUid());
+                                                            docRef.update("avatar", downloadUrl).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Toast.makeText(getContext(), "Avatar cambiado con éxito!", Toast.LENGTH_SHORT).show();
+                                                                    FragmentTransaction ft = getParentFragmentManager().beginTransaction()
+                                                                            .setCustomAnimations(
+                                                                                    R.anim.fade_in,
+                                                                                    R.anim.fade_out,
+                                                                                    R.anim.fade_in,
+                                                                                    R.anim.fade_out
+                                                                            );
+
+                                                                    ft.replace(R.id.fragmentContainerView, new TimeLineFragment()).commit();
+                                                                }
+                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    // Ocurrió un error al intentar actualizar el campo
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Ocurrió un error al intentar subir la imagen
+                                                }
+                                            });
+
+                                            // ...
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            // Ocurrió un error al intentar eliminar el archivo
+                                        }
+                                    });
+                                } else {
+                                    alertChangeAv.dismiss();
+                                }
+
+                            }
+                        });
+                    }
+                });
+
+                bChangePname.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alert.dismiss();
+
+                        AlertDialog.Builder bChange = new AlertDialog.Builder(getContext(), R.style.MyAlertDialogStyle);
+                        View vAlertChange = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_change_name_layout, null);
+                        bChange.setView(vAlertChange);
+                        AlertDialog alertChange = bChange.create();
+                        alertChange.show();
+                        Button confirmDelete = vAlertChange.findViewById(R.id.bConfirmar);
+
+                        confirmDelete.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                alertChange.dismiss();
+                                EditText name = vAlertChange.findViewById(R.id.nameBox);
+                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                DocumentReference docRef = db.collection("users").document(uFire.getUid());
+                                docRef.update("pName", name.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getContext(), "Nombre público cambiado con éxito", Toast.LENGTH_SHORT).show();
+                                        CollectionReference tunesColRef = db.collection("tunes");
+                                        tunesColRef.whereEqualTo("authorId", uFire.getUid()).get()
+                                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                                                            document.getReference().update("publicName", name.getText().toString());
+                                                        }
+                                                        loadTunes();
+                                                    }
+                                                });
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Ocurrió un error al intentar actualizar el campo
+                                    }
+                                });
+
+                            }
+                        });
+                    }
+                });
+
+                bDeleteUser.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alert.dismiss();
+                        AlertDialog.Builder bDelete = new AlertDialog.Builder(getContext(), R.style.MyAlertDialogStyle);
+
+                        View vAlertDelete = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_delete_user_layout, null);
+                        bDelete.setView(vAlertDelete);
+                        AlertDialog alertDelete = bDelete.create();
+                        alertDelete.show();
+
+                        Button bCancelD = vAlertDelete.findViewById(R.id.bCancel);
+                        Button bAcceptD = vAlertDelete.findViewById(R.id.bAccept);
+
+                        bCancelD.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                alertDelete.dismiss();
+                            }
+                        });
+
+                        bAcceptD.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                alertDelete.dismiss();
+
+                                AlertDialog.Builder bDeleteC = new AlertDialog.Builder(getContext(), R.style.MyAlertDialogStyle);
+                                View vAlertDeleteC = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_delete_user_relog_layout, null);
+                                bDeleteC.setView(vAlertDeleteC);
+                                AlertDialog alertDeleteC = bDeleteC.create();
+                                alertDeleteC.show();
+                                Button confirmDelete = vAlertDeleteC.findViewById(R.id.bConfirmar);
+
+                                confirmDelete.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        EditText usernameET = vAlertDeleteC.findViewById(R.id.emailBox);
+                                        EditText passET = vAlertDeleteC.findViewById(R.id.passBox);
+
+                                        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                        String email = usernameET.getText().toString();
+                                        String password = passET.getText().toString();
+                                        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+
+                                        user.reauthenticate(credential)
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        alertDeleteC.dismiss();
+                                                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                                                        StorageReference storageRef = storage.getReference();
+                                                        StorageReference avatarRef = storageRef.child("avatars/" + user.getUid());
+                                                        avatarRef.delete();
+
+                                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                                        DocumentReference userRef = db.collection("users").document(user.getUid());
+                                                        userRef.delete();
+
+                                                        user.delete()
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        if (task.isSuccessful()) {
+                                                                            Toast.makeText(getContext(), "Usuario borrado con éxito!", Toast.LENGTH_SHORT).show();
+                                                                            FirebaseAuth.getInstance().signOut();
+                                                                            FragmentTransaction ft = getParentFragmentManager().beginTransaction()
+                                                                                    .setCustomAnimations(
+                                                                                            R.anim.fade_in,
+                                                                                            R.anim.fade_out,
+                                                                                            R.anim.fade_in,
+                                                                                            R.anim.fade_out
+                                                                                    );
+
+                                                                            LoginFragment loginFragment = new LoginFragment();
+                                                                            ft.replace(R.id.fragmentContainerView, loginFragment).commit();
+
+                                                                        }
+                                                                    }
+                                                                });
+
+
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        String errorMessage;
+                                                        if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                                                            errorMessage = "Usuario o contraseña incorrectos. Inténtalo de nuevo.";
+                                                        } else if (e instanceof FirebaseAuthInvalidUserException) {
+                                                            errorMessage = "El usuario no existe o ha sido deshabilitado.";
+                                                        } else {
+                                                            errorMessage = "Ha ocurrido un error. Inténtalo de nuevo más tarde.";
+                                                        }
+
+                                                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
+
+                                    }
+                                });
+
+
+
+                            }
+                        });
+
+
+
+                    }
+                });
 
                 bChangeFavGenre.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -502,7 +814,6 @@ public class TimeLineFragment extends Fragment {
             }
         });
 
-// Agrega un OnClickListener a tu vista para iniciar la animación al hacer clic
         ivLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

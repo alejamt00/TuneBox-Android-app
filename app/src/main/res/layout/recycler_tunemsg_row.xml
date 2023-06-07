@@ -9,7 +9,6 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="15dp"
         app:cardElevation="3dp"
@@ -22,13 +21,11 @@
             android:layout_marginTop="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginBottom="10dp"
-            android:layout_weight="0"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:gravity="center|start"
                 android:orientation="horizontal">
 
@@ -52,7 +49,6 @@
                             android:id="@+id/ivAvatarTune"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:layout_weight="0"
                             android:contentDescription="@string/avatar_del_usuario"
                             android:rotation="0"
                             android:rotationY="0"
@@ -66,11 +62,10 @@
 
                 <Space
                     android:layout_width="10dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0" />
+                    android:layout_height="wrap_content" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
@@ -78,10 +73,9 @@
                         android:id="@+id/publicNameTV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:text="PlaceHolderName"
+                        android:text="1111111111111111111111"
                         android:textColor="@color/black"
-                        android:textSize="15sp"
+                        android:textSize="13sp"
                         android:textStyle="bold"
                         tools:ignore="HardcodedText" />
 
@@ -89,15 +83,52 @@
                         android:id="@+id/userName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:text="placeHolderUser"
+                        android:text="22222222222222222222"
                         android:textColor="@android:color/darker_gray"
-                        android:textSize="15sp"
+                        android:textSize="11sp"
                         android:textStyle="italic"
                         tools:ignore="HardcodedText" />
+
                 </LinearLayout>
 
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/genreCV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:foregroundGravity="center"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="1dp"
+                    app:cardPreventCornerOverlap="true"
+                    app:cardUseCompatPadding="false">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/genre"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="3dp"
+                            android:gravity="center"
+                            android:padding="4dp"
+                            android:text="Classical Music"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
+
+                </androidx.cardview.widget.CardView>
+
             </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -107,39 +138,32 @@
                 android:gravity="end"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/msgTune"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:orientation="vertical">
+                    android:text="placeHolderText"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    tools:ignore="HardcodedText" />
 
-                    <TextView
-                        android:id="@+id/msgTune"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="placeHolderText"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/black"
-                        android:textSize="15sp"
-                        tools:ignore="HardcodedText" />
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
 
-                    <Space
-                        android:layout_width="match_parent"
-                        android:layout_height="10dp" />
-
-                    <TextView
-                        android:id="@+id/date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="xx-xx-xxxx"
-                        android:textColor="#808080"
-                        android:textSize="14sp"
-                        tools:ignore="HardcodedText" />
-
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="xx-xx-xxxx"
+                    android:textColor="#808080"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
             </LinearLayout>
         </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
 </LinearLayout>

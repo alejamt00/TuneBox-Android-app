@@ -8,5 +8,6 @@
     <color name="black">#1d1d1b</color>
     <color name="white">#FFFFFFFF</color>
     <color name="main_purple">#FFbf407f</color>
+    <color name="main_purple_variant_darker">#FF852c58</color>
     <color name="main_purple_variant_bright">#FFbf407f</color>
 </resources>

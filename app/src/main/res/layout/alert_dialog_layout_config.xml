@@ -24,7 +24,7 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:layout_weight="0"
                 android:gravity="center"
@@ -67,7 +67,31 @@
                     android:id="@+id/imageView4"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    app:srcCompat="@drawable/change_pass" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp"
+                    android:layout_weight="0" />
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    app:srcCompat="@drawable/user_delete" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp"
+                    android:layout_weight="0" />
+
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     app:srcCompat="@drawable/disconnect" />
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -94,11 +118,11 @@
                     android:layout_weight="0" />
 
                 <Button
-                    android:id="@+id/bChangeUsername"
+                    android:id="@+id/bChangeName"
                     android:layout_width="200dp"
                     android:layout_height="50dp"
                     android:background="@drawable/border_bgless_button"
-                    android:text="@string/bChangeUserName"
+                    android:text="@string/bChangePublicName"
                     android:textColor="@drawable/color_text_button"
                     android:textSize="10sp"
                     android:textStyle="bold" />
@@ -124,6 +148,36 @@
                     android:layout_weight="0" />
 
                 <Button
+                    android:id="@+id/bChangePassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_bgless_button"
+                    android:text="@string/bChangePass"
+                    android:textColor="@drawable/color_text_button"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp"
+                    android:layout_weight="0" />
+
+                <Button
+                    android:id="@+id/bDeleteUser"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/border_bgless_button"
+                    android:text="@string/bDelete"
+                    android:textColor="@drawable/color_text_button"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp"
+                    android:layout_weight="0" />
+
+                <Button
                     android:id="@+id/bLogOff"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -133,8 +187,8 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
-
             </LinearLayout>
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -136,6 +140,36 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 }
             }
         });
+
+        TuneMsg msg = listaTunes.get(position);
+
+        String musicGenre = msg.getMusicTL();
+
+        // Establecer el color del elemento en función del género musical del mensaje
+        if (musicGenre.equals("Banda Sonora") || musicGenre.equals("Soundtracks")) {
+            holder.cardView.setCardBackgroundColor(Color.BLUE);
+        } else if (musicGenre.equals(c.getString(R.string.rockString))) {
+            holder.cardView.setCardBackgroundColor(Color.RED);
+        } else if (musicGenre.equals(c.getString(R.string.indieString))) {
+            holder.cardView.setCardBackgroundColor(Color.GREEN);
+        } else if (musicGenre.equals(c.getString(R.string.metalString))) {
+            holder.cardView.setCardBackgroundColor(Color.BLACK);
+        } else if (musicGenre.equals(c.getString(R.string.popString))) {
+            holder.cardView.setCardBackgroundColor(Color.MAGENTA);
+        } else if (musicGenre.equals(c.getString(R.string.reggaetonString))) {
+            holder.cardView.setCardBackgroundColor(Color.CYAN);
+        } else if (musicGenre.equals("Música Clásica") || musicGenre.equals("Classical Music")) {
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#8B8000"));
+        } else if (musicGenre.equals(c.getString(R.string.technoString))) {
+            holder.cardView.setCardBackgroundColor(Color.DKGRAY);
+        } else if (musicGenre.equals(c.getString(R.string.hiphopString))) {
+            holder.cardView.setCardBackgroundColor(Color.LTGRAY);
+        } else if (musicGenre.equals(c.getString(R.string.flamencoString))) {
+            holder.cardView.setCardBackgroundColor(Color.WHITE);
+        } else {
+            holder.cardView.setCardBackgroundColor(Color.GRAY);
+        }
+
     }
 
     /**
@@ -154,6 +188,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         private ImageView avatarIV;
+        private CardView cardView;
+        private TextView genre;
         private TextView publicNameTV;
         private TextView userNameTV;
         private TextView tuneMsgTV;
@@ -166,6 +202,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
          */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            cardView = itemView.findViewById(R.id.genreCV);
+            genre = itemView.findViewById(R.id.genre);
             avatarIV = itemView.findViewById(R.id.ivAvatarTune);
             publicNameTV = itemView.findViewById(R.id.publicNameTV);
             userNameTV = itemView.findViewById(R.id.userName);
@@ -180,7 +218,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
          * @param tMsg Mensaje a mostrar
          */
         public void bindData(TuneMsg tMsg){
-            Glide.with(itemView.getContext()).load(tMsg.getAvatar()).into(avatarIV);
+            Glide.with(itemView.getContext())
+                    .load(tMsg.getAvatar())
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .into(avatarIV);
+            genre.setText(tMsg.getMusicTL());
             publicNameTV.setText(tMsg.getPublicName());
             userNameTV.setText("@" + tMsg.getUserName());
             tuneMsgTV.setText(tMsg.getMsg());

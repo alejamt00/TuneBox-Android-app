@@ -39,7 +39,7 @@
     <string name="registerSuccess">Successfully registered user!</string>
     <string name="existError">This user already exists!</string>
     <string name="avatarError">Avatar not selected!</string>
-    <string name="errorFieldsNotFilled">Some fields are missing...</string>
+    <string name="errorFieldsNotFilled">Some fields are missing... Remember the username can\'t contain any spaces either</string>
     <string name="wrongData">Wrong data...</string>
     <string name="user">User</string>
     <string name="signGoogle">Sign in with Google!</string>
@@ -51,7 +51,11 @@
     <string name="existEmailError">There is already an account with this email address...</string>
     <string name="errorCreate">An error occurred while creating the account...</string>
     <string name="bChangeAvatarText">Change avatar</string>
-    <string name="bChangeUserName">Change username</string>
     <string name="bChangeFavGenre">Change musical taste</string>
     <string name="bDisconnect">Log off</string>
+    <string name="bDelete">Delete account</string>
+    <string name="bChangePublicName">Change public name</string>
+    <string name="bChangePass">Change password</string>
+    <string name="quieres_borrar_este_user">Do you want to delete your user?</string>
+    <string name="confirm">Confirm</string>
 </resources>

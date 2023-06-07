@@ -118,7 +118,7 @@ public class RegisterFragment extends Fragment {
      */
     public boolean dataFilled() {
         return (!genreSpinner.getSelectedItem().toString().equals(getString(R.string.genreString))
-                && !dateBox.getText().toString().trim().equals("") && !userBox.getText().toString().trim().equals("")
+                && !dateBox.getText().toString().trim().equals("") && !userBox.getText().toString().trim().equals("") && !userBox.getText().toString().contains(" ")
                 && !nameBox.getText().toString().trim().equals("") && !passBox.getText().toString().trim().equals(""));
     }
 

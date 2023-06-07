@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -83,7 +84,11 @@ public class ProfileFragment extends Fragment {
                     if (document.exists()) {
                         userPf = document.toObject(User.class);
                         ImageView ivAvatar = view.findViewById(R.id.ivPFP);
-                        Glide.with(getContext()).load(userPf.getAvatarUrl()).into(ivAvatar);
+                        Glide.with(getContext())
+                                .load(userPf.getAvatarUrl())
+                                .skipMemoryCache(true)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .into(ivAvatar);
 
                         TextView pName = view.findViewById(R.id.publicNameTV);
                         TextView userName = view.findViewById(R.id.userNameTV);
