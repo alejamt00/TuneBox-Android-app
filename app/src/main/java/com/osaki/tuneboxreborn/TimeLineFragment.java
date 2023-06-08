@@ -643,9 +643,9 @@ public class TimeLineFragment extends Fragment {
                         bChange.setView(vAlertChange);
                         AlertDialog alertChange = bChange.create();
                         alertChange.show();
-                        Button confirmDelete = vAlertChange.findViewById(R.id.bConfirmar);
+                        Button confirmChangeB = vAlertChange.findViewById(R.id.bConfirmar);
 
-                        confirmDelete.setOnClickListener(new View.OnClickListener() {
+                        confirmChangeB.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 EditText name = vAlertChange.findViewById(R.id.nameBox);
@@ -740,6 +740,20 @@ public class TimeLineFragment extends Fragment {
                                                         avatarRef.delete();
 
                                                         FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                                        CollectionReference tunesRef = db.collection("tunes");
+
+                                                        tunesRef.whereEqualTo("authorID", user.getUid())
+                                                                .get()
+                                                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                                    @Override
+                                                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                                                            document.getReference().delete();
+                                                                        }
+                                                                    }
+                                                                });
+
+
                                                         DocumentReference userRef = db.collection("users").document(user.getUid());
                                                         userRef.delete();
 
