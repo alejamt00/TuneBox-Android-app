@@ -147,25 +147,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         // Establecer el color del elemento en función del género musical del mensaje
         if (musicGenre.equals("Banda Sonora") || musicGenre.equals("Soundtracks")) {
-            holder.cardView.setCardBackgroundColor(Color.BLUE);
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#1E90FF"));
         } else if (musicGenre.equals(c.getString(R.string.rockString))) {
-            holder.cardView.setCardBackgroundColor(Color.RED);
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#DC143C"));
         } else if (musicGenre.equals(c.getString(R.string.indieString))) {
-            holder.cardView.setCardBackgroundColor(Color.GREEN);
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#3CB371"));
         } else if (musicGenre.equals(c.getString(R.string.metalString))) {
-            holder.cardView.setCardBackgroundColor(Color.BLACK);
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#292828"));
         } else if (musicGenre.equals(c.getString(R.string.popString))) {
-            holder.cardView.setCardBackgroundColor(Color.MAGENTA);
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#ce5ae0"));
         } else if (musicGenre.equals(c.getString(R.string.reggaetonString))) {
-            holder.cardView.setCardBackgroundColor(Color.CYAN);
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#00008B"));
         } else if (musicGenre.equals("Música Clásica") || musicGenre.equals("Classical Music")) {
-            holder.cardView.setCardBackgroundColor(Color.parseColor("#8B8000"));
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#ffee57"));
         } else if (musicGenre.equals(c.getString(R.string.technoString))) {
-            holder.cardView.setCardBackgroundColor(Color.DKGRAY);
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#FF7F50"));
         } else if (musicGenre.equals(c.getString(R.string.hiphopString))) {
-            holder.cardView.setCardBackgroundColor(Color.LTGRAY);
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#8B4513"));
         } else if (musicGenre.equals(c.getString(R.string.flamencoString))) {
-            holder.cardView.setCardBackgroundColor(Color.WHITE);
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#FF1493"));
         } else {
             holder.cardView.setCardBackgroundColor(Color.GRAY);
         }

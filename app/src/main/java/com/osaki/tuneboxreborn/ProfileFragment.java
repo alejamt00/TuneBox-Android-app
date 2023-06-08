@@ -73,6 +73,11 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Obtiene los datos del usuario de la base de datos y los muestra en la vista (y setea userPf con dicho user).
+     * @param uuid el identificador único del usuario.
+     * @param view la vista en la que se mostrarán los datos del usuario.
+     */
     private void getUserData(String uuid, View view){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(uuid);
@@ -131,7 +136,7 @@ public class ProfileFragment extends Fragment {
     }
 
     /**
-     * Método para cargar los datos de los Tunes en la lista.
+     * Método para cargar los datos de los Tunes en la lista y actualizar el recycler.
      */
     public void loadTunes(){
 

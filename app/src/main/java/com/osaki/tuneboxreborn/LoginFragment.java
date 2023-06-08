@@ -84,6 +84,10 @@ public class LoginFragment extends Fragment {
         return (!usernameET.getText().toString().equals("")&&!passET.getText().toString().equals(""));
     }
 
+    /**
+     * Inicia la animación de carga.
+     * @param loadingView la vista que contiene la imagen de carga.
+     */
     public void startAnimation(View loadingView){
 
         dLoading = getContext().getDrawable(R.drawable.logo_animado);
@@ -96,6 +100,10 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    /**
+     * Inicia la animación de cambio de color del logo.
+     * @param loadingView la vista que contiene la imagen del logo.
+     */
     private void startAnimationColor(View loadingView) {
         ImageView ivLogoLoading = loadingView.findViewById(R.id.logoIcono);
         Drawable drawableLogo = ivLogoLoading.getDrawable();
@@ -119,7 +127,12 @@ public class LoginFragment extends Fragment {
 
     }
 
-
+    /**
+     * Inicia sesión en la aplicación con correo y contraseña.
+     * @param correo el correo electrónico del usuario.
+     * @param pass la contraseña del usuario.
+     * @param inflater el LayoutInflater para inflar la vista de carga.
+     */
     public void login(String correo, String pass, LayoutInflater inflater){
 
         View loadingView = inflater.inflate(R.layout.dialog_progress, null);
@@ -133,9 +146,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Toast toast = Toast.makeText(getContext(), getString(R.string.correctUser), Toast.LENGTH_SHORT);
-                    toast.setMargin(50, 50);
-                    toast.show();
+                    Toast.makeText(getContext(), getString(R.string.correctUser), Toast.LENGTH_SHORT).show();
                     FragmentTransaction ft = getParentFragmentManager().beginTransaction()
                             .setCustomAnimations(
                                     R.anim.fade_in,
@@ -149,9 +160,7 @@ public class LoginFragment extends Fragment {
                     ft.addToBackStack(null);
 
                 } else {
-                    Toast toast = Toast.makeText(getContext(), getString(R.string.wrongData), Toast.LENGTH_SHORT);
-                    toast.setMargin(50, 50);
-                    toast.show();
+                    Toast.makeText(getContext(), getString(R.string.wrongData), Toast.LENGTH_SHORT).show();
                 }
                 startAnimationColor(loadingView);
                 TransitionManager.beginDelayedTransition(rootView,new Fade());
@@ -211,9 +220,7 @@ public class LoginFragment extends Fragment {
                             imm.hideSoftInputFromWindow(passET.getWindowToken(), 0);
                             login(usernameET.getText().toString(),passET.getText().toString(),inflater);
                         } else {
-                            Toast toast = Toast.makeText(getContext(), getString(R.string.fillBothFields), Toast.LENGTH_SHORT);
-                            toast.setMargin(50, 50);
-                            toast.show();
+                            Toast.makeText(getContext(), getString(R.string.fillBothFields), Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case MotionEvent.ACTION_UP:

@@ -124,6 +124,9 @@ public class TimeLineFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Se llama cuando el fragmento se reanuda. Si el usuario no es nulo, carga los mensajes.
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -230,6 +233,9 @@ public class TimeLineFragment extends Fragment {
 
     }
 
+    /**
+     * Inicia la animación de carga.
+     */
     public void startMoveAnimation(){
         Drawable drawable = getContext().getDrawable(R.drawable.logo_animado);
         ivLogo.setImageDrawable(drawable);
@@ -240,6 +246,9 @@ public class TimeLineFragment extends Fragment {
         }
     }
 
+    /**
+     * Inicia la animación de cambio de color del logo.
+     */
     public void startColorAnimation(){
         // Obtiene el Drawable de la vista
         Drawable drawableLogo = ivLogo.getDrawable();
@@ -394,7 +403,12 @@ public class TimeLineFragment extends Fragment {
                 Button bAccept = vAlert.findViewById(R.id.bPublish);
                 Button bCancel = vAlert.findViewById(R.id.bCancel);
                 ImageView ivAvatarTune = vAlert.findViewById(R.id.ivAvatarTune);
-                Glide.with(getContext()).load(user.getAvatarUrl()).into(ivAvatarTune);
+
+                Glide.with(getContext())
+                        .load(user.getAvatarUrl())
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .into(ivAvatarTune);
 
                 AlertDialog alert = builder.create();
 
@@ -435,7 +449,88 @@ public class TimeLineFragment extends Fragment {
                 Button bChangeFavGenre = vAlert.findViewById(R.id.bChangeFavGenre);
                 Button bChangePname = vAlert.findViewById(R.id.bChangeName);
                 Button bChangeAvatar = vAlert.findViewById(R.id.bChangeAvatar);
+                Button bChangePass = vAlert.findViewById(R.id.bChangePassword);
                 AlertDialog alert = builder.create();
+
+                bChangePass.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        alert.dismiss();
+
+                        AlertDialog.Builder bPassC = new AlertDialog.Builder(getContext(), R.style.MyAlertDialogStyle);
+                        View vAlertPassC = LayoutInflater.from(getContext()).inflate(R.layout.alert_dialog_change_pass_relog_layout, null);
+                        bPassC.setView(vAlertPassC);
+                        AlertDialog alertPassC = bPassC.create();
+                        alertPassC.show();
+                        Button confirmChange = vAlertPassC.findViewById(R.id.bConfirmar);
+
+                        confirmChange.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                EditText usernameET = vAlertPassC.findViewById(R.id.emailBox);
+                                EditText passET = vAlertPassC.findViewById(R.id.passBox);
+                                EditText newPassET = vAlertPassC.findViewById(R.id.newPassBox);
+
+                                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                String email = usernameET.getText().toString();
+                                String password = passET.getText().toString();
+                                String newPass = newPassET.getText().toString();
+
+                                if (!newPass.isEmpty() && !email.isEmpty() && !password.isEmpty() && password.length()>=6) {
+                                    alertPassC.dismiss();
+                                    startMoveAnimation();
+                                    rootView.addView(loadingView);
+
+                                    AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+
+                                    user.reauthenticate(credential)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        startColorAnimation();
+                                                        user.updatePassword(newPass).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    FirebaseAuth.getInstance().signOut();
+                                                                    FragmentTransaction ft = getParentFragmentManager().beginTransaction()
+                                                                            .setCustomAnimations(
+                                                                                    R.anim.fade_in,
+                                                                                    R.anim.fade_out,
+                                                                                    R.anim.fade_in,
+                                                                                    R.anim.fade_out
+                                                                            );
+                                                                    rootView.removeView(loadingView);
+                                                                    Toast.makeText(getContext(), getString(R.string.changedPassCorrectly), Toast.LENGTH_SHORT).show();
+                                                                    ft.replace(R.id.fragmentContainerView, new LoginFragment()).commit();
+                                                                } else {
+                                                                }
+                                                            }
+                                                        });
+                                                    } else {
+                                                    }
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    String errorMessage;
+                                                    TransitionManager.beginDelayedTransition(rootView,new Fade());
+                                                    rootView.removeView(loadingView);
+
+                                                    Toast.makeText(getContext(), getString(R.string.wrongData), Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
+
+                                } else {
+                                    Toast.makeText(getContext(), getString(R.string.fillBothFields), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                });
 
                 bChangeAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -494,7 +589,7 @@ public class TimeLineFragment extends Fragment {
                                                             docRef.update("avatar", downloadUrl).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {
-                                                                    Toast.makeText(getContext(), "Avatar cambiado con éxito!", Toast.LENGTH_SHORT).show();
+                                                                    Toast.makeText(getContext(), getString(R.string.avatarChangedConfirmed), Toast.LENGTH_SHORT).show();
                                                                     FragmentTransaction ft = getParentFragmentManager().beginTransaction()
                                                                             .setCustomAnimations(
                                                                                     R.anim.fade_in,
@@ -553,33 +648,36 @@ public class TimeLineFragment extends Fragment {
                         confirmDelete.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                alertChange.dismiss();
                                 EditText name = vAlertChange.findViewById(R.id.nameBox);
-                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                DocumentReference docRef = db.collection("users").document(uFire.getUid());
-                                docRef.update("pName", name.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(getContext(), "Nombre público cambiado con éxito", Toast.LENGTH_SHORT).show();
-                                        CollectionReference tunesColRef = db.collection("tunes");
-                                        tunesColRef.whereEqualTo("authorId", uFire.getUid()).get()
-                                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                                    @Override
-                                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                                        for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                                                            document.getReference().update("publicName", name.getText().toString());
+                                String newName = name.getText().toString();
+                                if(!newName.trim().isEmpty()){
+                                    alertChange.dismiss();
+                                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                    DocumentReference docRef = db.collection("users").document(uFire.getUid());
+                                    docRef.update("pName", name.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(getContext(), getString(R.string.pNameChangedConfirmed), Toast.LENGTH_SHORT).show();
+                                            CollectionReference tunesColRef = db.collection("tunes");
+                                            tunesColRef.whereEqualTo("authorId", uFire.getUid()).get()
+                                                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                        @Override
+                                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                            for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                                                                document.getReference().update("publicName", name.getText().toString());
+                                                            }
+                                                            loadTunes();
                                                         }
-                                                        loadTunes();
-                                                    }
-                                                });
+                                                    });
 
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        // Ocurrió un error al intentar actualizar el campo
-                                    }
-                                });
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            // Ocurrió un error al intentar actualizar el campo
+                                        }
+                                    });
+                                }
 
                             }
                         });
@@ -650,7 +748,7 @@ public class TimeLineFragment extends Fragment {
                                                                     @Override
                                                                     public void onComplete(@NonNull Task<Void> task) {
                                                                         if (task.isSuccessful()) {
-                                                                            Toast.makeText(getContext(), "Usuario borrado con éxito!", Toast.LENGTH_SHORT).show();
+                                                                            Toast.makeText(getContext(), getString(R.string.deletedUserConfirmed), Toast.LENGTH_SHORT).show();
                                                                             FirebaseAuth.getInstance().signOut();
                                                                             FragmentTransaction ft = getParentFragmentManager().beginTransaction()
                                                                                     .setCustomAnimations(
@@ -673,16 +771,7 @@ public class TimeLineFragment extends Fragment {
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
-                                                        String errorMessage;
-                                                        if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                                                            errorMessage = "Usuario o contraseña incorrectos. Inténtalo de nuevo.";
-                                                        } else if (e instanceof FirebaseAuthInvalidUserException) {
-                                                            errorMessage = "El usuario no existe o ha sido deshabilitado.";
-                                                        } else {
-                                                            errorMessage = "Ha ocurrido un error. Inténtalo de nuevo más tarde.";
-                                                        }
-
-                                                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(getContext(), getString(R.string.wrongData), Toast.LENGTH_SHORT).show();
                                                     }
                                                 });
 
@@ -746,7 +835,7 @@ public class TimeLineFragment extends Fragment {
                                 docRef.update("genre", genreSpinner.getSelectedItem().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Toast.makeText(getContext(), "Género musical cambiado correctamente!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), getString(R.string.genreChangedConfirmed), Toast.LENGTH_SHORT).show();
                                         user.setGenre(genreSpinner.getSelectedItem().toString());
                                         loadTunes();
                                         alertGenre.dismiss();
@@ -754,7 +843,7 @@ public class TimeLineFragment extends Fragment {
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(getContext(), "Error al cambiar de género musical favorito!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), getString(R.string.errorChangeGenre), Toast.LENGTH_SHORT).show();
                                         alertGenre.dismiss();
                                     }
                                 });

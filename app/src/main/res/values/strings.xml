@@ -27,6 +27,7 @@
     <string name="user">Usuario</string>
     <string name="pName">Nombre</string>
     <string name="contrase_a">Contraseña</string>
+    <string name="contrase_a_nueva">Nueva contraseña</string>
     <string name="no_tienes_cuenta_reg_strate">¿No tienes cuenta? Regístrate</string>
     <string name="iniciar_sesi_n">Iniciar Sesión</string>
     <string name="g_nero_musical_favorito">Género musical favorito:\ </string>
@@ -58,4 +59,10 @@
     <string name="bChangePass">Cambiar contraseña</string>
     <string name="bDisconnect">Cerrar sesión</string>
     <string name="bDelete">Borrar cuenta</string>
+    <string name="changedPassCorrectly">¡Contraseña cambiada correctamente! Inicie sesión de nuevo...</string>
+    <string name="avatarChangedConfirmed">¡Avatar cambiado con éxito!</string>
+    <string name="pNameChangedConfirmed">¡Nombre público cambiado con éxito!</string>
+    <string name="deletedUserConfirmed">Usuario borrado con éxito</string>
+    <string name="genreChangedConfirmed">¡Género musical cambiado correctamente!</string>
+    <string name="errorChangeGenre">¡Error al cambiar de género!</string>
 </resources>

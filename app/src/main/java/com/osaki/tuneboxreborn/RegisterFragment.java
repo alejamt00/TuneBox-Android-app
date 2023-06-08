@@ -122,6 +122,11 @@ public class RegisterFragment extends Fragment {
                 && !nameBox.getText().toString().trim().equals("") && !passBox.getText().toString().trim().equals(""));
     }
 
+    /**
+     * Inicializa los datos y las vistas para el registro de usuario.
+     * @param view la vista en la que se mostrarán los datos del usuario.
+     * @param inflater el LayoutInflater para inflar la vista de carga.
+     */
     private void initData(View view, LayoutInflater inflater) {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
@@ -197,6 +202,10 @@ public class RegisterFragment extends Fragment {
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 
+    /**
+     * Inicia la animación de carga.
+     * @param loadingView la vista que contiene la imagen de carga.
+     */
     public void startAnimation(View loadingView, LayoutInflater inflater){
         Drawable dLoading = getContext().getDrawable(R.drawable.logo_animado);
         ImageView ivLogoLoading = loadingView.findViewById(R.id.logoIcono);
@@ -208,6 +217,10 @@ public class RegisterFragment extends Fragment {
         }
     }
 
+    /**
+     * Inicia la animación de cambio de color del logo.
+     * @param loadingView la vista que contiene la imagen del logo.
+     */
     private void startAnimationColor(View loadingView) {
         ImageView ivLogoLoading = loadingView.findViewById(R.id.logoIcono);
         Drawable drawableLogo = ivLogoLoading.getDrawable();
@@ -231,6 +244,10 @@ public class RegisterFragment extends Fragment {
 
     }
 
+    /**
+     * Realiza el registro del usuario.
+     * @param inflater el LayoutInflater para inflar la vista de carga.
+     */
     private void PerformAuth(LayoutInflater inflater) {
         String email = mailBox.getText().toString();
         String pass = passBox.getText().toString();
@@ -449,9 +466,7 @@ public class RegisterFragment extends Fragment {
                 if(dataFilled()){
                     PerformAuth(inflater);
                 } else {
-                    Toast toast = Toast.makeText(getContext(), getString(R.string.errorFieldsNotFilled) + "", Toast.LENGTH_SHORT);
-                    toast.setMargin(50, 50);
-                    toast.show();
+                    Toast.makeText(getContext(), getString(R.string.errorFieldsNotFilled) + "", Toast.LENGTH_SHORT).show();
                 }
             }
         });

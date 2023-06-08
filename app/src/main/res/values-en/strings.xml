@@ -58,4 +58,11 @@
     <string name="bChangePass">Change password</string>
     <string name="quieres_borrar_este_user">Do you want to delete your user?</string>
     <string name="confirm">Confirm</string>
+    <string name="contrase_a_nueva">New password</string>
+    <string name="changedPassCorrectly">Password changed correctly! Sign in again...</string>
+    <string name="avatarChangedConfirmed">Avatar changed correctly!</string>
+    <string name="pNameChangedConfirmed">Public name changed correctly!</string>
+    <string name="deletedUserConfirmed">User deleted correctly!</string>
+    <string name="genreChangedConfirmed">Music genre changed correctly!</string>
+    <string name="errorChangeGenre">Error while changing music genre...</string>
 </resources>
