@@ -742,7 +742,7 @@ public class TimeLineFragment extends Fragment {
                                                         FirebaseFirestore db = FirebaseFirestore.getInstance();
                                                         CollectionReference tunesRef = db.collection("tunes");
 
-                                                        tunesRef.whereEqualTo("authorID", user.getUid())
+                                                        tunesRef.whereEqualTo("authorId", user.getUid())
                                                                 .get()
                                                                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                                                     @Override
