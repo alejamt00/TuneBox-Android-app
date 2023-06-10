@@ -597,7 +597,6 @@ public class TimeLineFragment extends Fragment {
                                                                                     R.anim.fade_in,
                                                                                     R.anim.fade_out
                                                                             );
-
                                                                     CollectionReference tunesColRef = db.collection("tunes");
                                                                     tunesColRef.whereEqualTo("authorId", uFire.getUid()).get()
                                                                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
