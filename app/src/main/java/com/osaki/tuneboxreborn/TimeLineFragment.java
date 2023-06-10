@@ -586,7 +586,7 @@ public class TimeLineFragment extends Fragment {
                                                             // Actualizar el valor del campo "avatar" en el documento del usuario
                                                             FirebaseFirestore db = FirebaseFirestore.getInstance();
                                                             DocumentReference docRef = db.collection("users").document(uFire.getUid());
-                                                            docRef.update("avatar", downloadUrl).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            docRef.update("avatarUrl", downloadUrl).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {
                                                                     Toast.makeText(getContext(), getString(R.string.avatarChangedConfirmed), Toast.LENGTH_SHORT).show();
@@ -597,6 +597,19 @@ public class TimeLineFragment extends Fragment {
                                                                                     R.anim.fade_in,
                                                                                     R.anim.fade_out
                                                                             );
+
+                                                                    CollectionReference tunesColRef = db.collection("tunes");
+                                                                    tunesColRef.whereEqualTo("authorId", uFire.getUid()).get()
+                                                                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                                                @Override
+                                                                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                                                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                                                                                        document.getReference().update("avatar", downloadUrl);
+                                                                                    }
+                                                                                    loadTunes();
+                                                                                }
+                                                                            });
+
 
                                                                     ft.replace(R.id.fragmentContainerView, new TimeLineFragment()).commit();
                                                                 }
@@ -621,7 +634,63 @@ public class TimeLineFragment extends Fragment {
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            // Ocurrió un error al intentar eliminar el archivo
+                                            // El archivo se eliminó correctamente
+                                            // Subir el nuevo avatar
+                                            StorageReference newAvatarRef = storageRef.child("avatars/" + uFire.getUid());
+                                            UploadTask uploadTask = newAvatarRef.putFile(avatarUri);
+                                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                    // La imagen se subió correctamente
+                                                    // Obtener la URL de descarga de la imagen
+                                                    newAvatarRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                        @Override
+                                                        public void onSuccess(Uri uri) {
+                                                            String downloadUrl = uri.toString();
+                                                            // Actualizar el valor del campo "avatar" en el documento del usuario
+                                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                                            DocumentReference docRef = db.collection("users").document(uFire.getUid());
+                                                            docRef.update("avatarUrl", downloadUrl).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Toast.makeText(getContext(), getString(R.string.avatarChangedConfirmed), Toast.LENGTH_SHORT).show();
+                                                                    FragmentTransaction ft = getParentFragmentManager().beginTransaction()
+                                                                            .setCustomAnimations(
+                                                                                    R.anim.fade_in,
+                                                                                    R.anim.fade_out,
+                                                                                    R.anim.fade_in,
+                                                                                    R.anim.fade_out
+                                                                            );
+                                                                    CollectionReference tunesColRef = db.collection("tunes");
+                                                                    tunesColRef.whereEqualTo("authorId", uFire.getUid()).get()
+                                                                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                                                @Override
+                                                                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                                                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                                                                                        document.getReference().update("avatar", downloadUrl);
+                                                                                    }
+                                                                                    loadTunes();
+                                                                                }
+                                                                            });
+
+                                                                    ft.replace(R.id.fragmentContainerView, new TimeLineFragment()).commit();
+                                                                }
+                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    // Ocurrió un error al intentar actualizar el campo
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Ocurrió un error al intentar subir la imagen
+                                                }
+                                            });
+
                                         }
                                     });
                                 } else {
