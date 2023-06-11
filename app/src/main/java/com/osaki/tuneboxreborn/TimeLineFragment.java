@@ -786,67 +786,76 @@ public class TimeLineFragment extends Fragment {
 
                                         String email = usernameET.getText().toString();
                                         String password = passET.getText().toString();
-                                        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
 
-                                        user.reauthenticate(credential)
-                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        alertDeleteC.dismiss();
-                                                        FirebaseStorage storage = FirebaseStorage.getInstance();
-                                                        StorageReference storageRef = storage.getReference();
-                                                        StorageReference avatarRef = storageRef.child("avatars/" + user.getUid());
-                                                        avatarRef.delete();
+                                        if(!email.isEmpty() && !password.isEmpty()){
+                                            AuthCredential credential = EmailAuthProvider.getCredential(email, password);
 
-                                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                                        CollectionReference tunesRef = db.collection("tunes");
+                                            user.reauthenticate(credential)
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
 
-                                                        tunesRef.whereEqualTo("authorId", user.getUid())
-                                                                .get()
-                                                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                                                    @Override
-                                                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                                                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                                                                            document.getReference().delete();
-                                                                        }
-                                                                    }
-                                                                });
+                                                            if(task.isSuccessful()){
+                                                                alertDeleteC.dismiss();
+                                                                FirebaseStorage storage = FirebaseStorage.getInstance();
+                                                                StorageReference storageRef = storage.getReference();
+                                                                StorageReference avatarRef = storageRef.child("avatars/" + user.getUid());
+                                                                avatarRef.delete();
 
+                                                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                                                CollectionReference tunesRef = db.collection("tunes");
 
-                                                        DocumentReference userRef = db.collection("users").document(user.getUid());
-                                                        userRef.delete();
-
-                                                        user.delete()
-                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                    @Override
-                                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                                        if (task.isSuccessful()) {
-                                                                            Toast.makeText(getContext(), getString(R.string.deletedUserConfirmed), Toast.LENGTH_SHORT).show();
-                                                                            FirebaseAuth.getInstance().signOut();
-                                                                            FragmentTransaction ft = getParentFragmentManager().beginTransaction()
-                                                                                    .setCustomAnimations(
-                                                                                            R.anim.fade_in,
-                                                                                            R.anim.fade_out,
-                                                                                            R.anim.fade_in,
-                                                                                            R.anim.fade_out
-                                                                                    );
-
-                                                                            LoginFragment loginFragment = new LoginFragment();
-                                                                            ft.replace(R.id.fragmentContainerView, loginFragment).commit();
-
-                                                                        }
-                                                                    }
-                                                                });
+                                                                tunesRef.whereEqualTo("authorId", user.getUid())
+                                                                        .get()
+                                                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                                            @Override
+                                                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                                                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                                                                    document.getReference().delete();
+                                                                                }
+                                                                            }
+                                                                        });
 
 
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Toast.makeText(getContext(), getString(R.string.wrongData), Toast.LENGTH_SHORT).show();
-                                                    }
-                                                });
+                                                                DocumentReference userRef = db.collection("users").document(user.getUid());
+                                                                userRef.delete();
+
+                                                                user.delete()
+                                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                if (task.isSuccessful()) {
+                                                                                    Toast.makeText(getContext(), getString(R.string.deletedUserConfirmed), Toast.LENGTH_SHORT).show();
+                                                                                    FirebaseAuth.getInstance().signOut();
+                                                                                    FragmentTransaction ft = getParentFragmentManager().beginTransaction()
+                                                                                            .setCustomAnimations(
+                                                                                                    R.anim.fade_in,
+                                                                                                    R.anim.fade_out,
+                                                                                                    R.anim.fade_in,
+                                                                                                    R.anim.fade_out
+                                                                                            );
+
+                                                                                    LoginFragment loginFragment = new LoginFragment();
+                                                                                    ft.replace(R.id.fragmentContainerView, loginFragment).commit();
+
+                                                                                }
+                                                                            }
+                                                                        });
+
+                                                            } else {
+                                                                Toast.makeText(getContext(), getString(R.string.wrongData), Toast.LENGTH_SHORT).show();
+                                                            }
+
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            //Toast.makeText(getContext(), "ERROR", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+
+                                        }
 
 
                                     }
