@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">TuneBox</string>
-    <string name="bsString">Banda Sonora</string>
+    <string name="bsString">Soundtracks</string>
     <string name="rockString">Rock</string>
     <string name="indieString">Indie</string>
     <string name="metalString">Metal</string>
     <string name="popString">Pop</string>
     <string name="reggaetonString">Reggaeton</string>
-    <string name="classicalString">Música Clásica</string>
+    <string name="jazzString">Jazz</string>
     <string name="technoString">Techno</string>
     <string name="hiphopString">Hip Hop</string>
     <string name="flamencoString">Flamenco</string>

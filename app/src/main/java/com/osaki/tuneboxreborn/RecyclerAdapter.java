@@ -146,7 +146,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         String musicGenre = msg.getMusicTL();
 
         // Establecer el color del elemento en función del género musical del mensaje
-        if (musicGenre.equals("Banda Sonora") || musicGenre.equals("Soundtracks")) {
+        if (musicGenre.equals(c.getString(R.string.bsString))) {
             holder.cardView.setCardBackgroundColor(Color.parseColor("#1E90FF"));
         } else if (musicGenre.equals(c.getString(R.string.rockString))) {
             holder.cardView.setCardBackgroundColor(Color.parseColor("#DC143C"));
@@ -158,8 +158,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             holder.cardView.setCardBackgroundColor(Color.parseColor("#ce5ae0"));
         } else if (musicGenre.equals(c.getString(R.string.reggaetonString))) {
             holder.cardView.setCardBackgroundColor(Color.parseColor("#00008B"));
-        } else if (musicGenre.equals("Música Clásica") || musicGenre.equals("Classical Music")) {
-            holder.cardView.setCardBackgroundColor(Color.parseColor("#ffee57"));
+        } else if (musicGenre.equals(c.getString(R.string.jazzString))) {
+            holder.cardView.setCardBackgroundColor(Color.parseColor("#f2be00"));
         } else if (musicGenre.equals(c.getString(R.string.technoString))) {
             holder.cardView.setCardBackgroundColor(Color.parseColor("#FF7F50"));
         } else if (musicGenre.equals(c.getString(R.string.hiphopString))) {

@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Animatable;
@@ -22,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -37,17 +35,13 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -59,7 +53,6 @@ import com.google.firebase.storage.UploadTask;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.Inflater;
 
 /**
  * Clase LoginFragment que extiende la clase Fragment.
@@ -151,7 +144,7 @@ public class RegisterFragment extends Fragment {
         genreArray[4] = getString(R.string.metalString);
         genreArray[5] = getString(R.string.popString);
         genreArray[6] = getString(R.string.reggaetonString);
-        genreArray[7] = getString(R.string.classicalString);
+        genreArray[7] = getString(R.string.jazzString);
         genreArray[8] = getString(R.string.technoString);
         genreArray[9] = getString(R.string.hiphopString);
         genreArray[10] = getString(R.string.flamencoString);
