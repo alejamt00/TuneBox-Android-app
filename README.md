@@ -1,4 +1,4 @@
-# TuneBox Reborn
+# TuneBox
 ## Proyecto TFG: App Android tipo Twitter para amantes de la música
 Este proyecto es un trabajo de fin de grado (TFG) para el Instituto Albarregas de Mérida, España. Se trata de una aplicación Android que permite a los usuarios compartir sus gustos musicales, seguir a otros usuarios, comentar y dar me gusta a las publicaciones, y descubrir nueva música.
 
