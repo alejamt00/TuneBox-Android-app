@@ -1,6 +1,6 @@
 # TuneBox
 ## Proyecto TFG: App Android tipo Twitter para amantes de la música
-Este proyecto es un trabajo de fin de grado (TFG) para el Instituto Albarregas de Mérida, España. Se trata de una aplicación Android que permite a los usuarios compartir sus gustos musicales, seguir a otros usuarios, comentar y dar me gusta a las publicaciones, y descubrir nueva música.
+Este proyecto es un trabajo de fin de grado (TFG) para el Instituto Albarregas de Mérida, España. Se trata de una aplicación Android que permite a los usuarios compartir sus gustos musicales, ver otros post de otra gente con los mismos gustos musicales, etc...
 
 El proyecto está basado en otro proyecto de la asignatura de Android de 2º de Desarrollo de Aplicaciones Multiplataforma (DAM), pero se ha recreado reciclando algunos componentes en vez de actualizar el antiguo proyecto. La idea principal sigue siendo la misma: crear una red social para los amantes de la música.
 
